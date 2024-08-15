@@ -236,7 +236,7 @@ def get_question():
     correct_answer = armenian_alphabet[category][correct_index]
 
     if category == "pronunciation":
-        question = url_for("assets", filename=f"sounds/{correct_answer}")
+        question = url_for("static", filename=f"sounds/{correct_answer}")
     else:
         question = correct_answer
 
