@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Armenian Alphabet Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script>
+        async function fetchQuestion() {
+            const category = document.querySelector('input[name="category"]:checked').value;
+            const response = await fetch('/get_question', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `category=${category}`
+            });
+            const data = await response.json();
+            displayQuestion(data);
+        }
+
+        function displayQuestion(data) {
+            const questionElement = document.getElementById('question');
+            const choicesElement = document.getElementById('choices');
+            choicesElement.innerHTML = '';
+
+            if (data.question.endsWith('.m4a')) {
+                questionElement.innerHTML = `<audio controls src="${data.question}"></audio>`;
+            } else {
+                questionElement.textContent = data.question;
+            }
+
+            data.choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.textContent = choice;
+                button.onclick = () => checkAnswer(choice, data.correct);
+                choicesElement.appendChild(button);
+            });
+        }
+
+        function checkAnswer(choice, correct) {
+            if (choice === correct) {
+                alert('Correct!');
+            } else {
+                alert('Incorrect, try again.');
+            }
+            fetchQuestion();
+        }
+        function showAnswer() {
+            alert('The correct answer is: ' + correct);
+        }
+    </script>
+</head>
+<body onload="fetchQuestion()">
+    <div class="container">
+        <h1>Armenian Alphabet Quiz</h1>
+        <form class="mb-4">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="category" id="uppercase" value="uppercase" checked>
+                <label class="form-check-label" for="uppercase">Uppercase</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="category" id="lowercase" value="lowercase">
+                <label class="form-check-label" for="lowercase">Lowercase</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="category" id="transcription" value="transcription">
+                <label class="form-check-label" for="transcription">Transcription</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="category" id="pronunciation" value="pronunciation">
+                <label class="form-check-label" for="pronunciation">Pronunciation</label>
+            </div>
+        </form>
+        <div id="question" class="mb-4"></div>
+        <div id="choices"></div>
+    </div>
+</body>
+</html>
