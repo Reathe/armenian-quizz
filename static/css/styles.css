@@ -48,3 +48,11 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+/* Custom styles for SVG images */
+.handwritten-img {
+    width: 100px; /* Adjust the size as needed */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}

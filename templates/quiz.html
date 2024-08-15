@@ -39,31 +39,57 @@
             if (data.question.endsWith('.ogg')) {
                 questionElement.innerHTML = `<audio controls src="${data.question}"></audio>`;
             } else if (data.question.endsWith('.svg')) {
-                questionElement.innerHTML = `<img src="${data.question}" class="img-fluid" alt="Handwritten Letter">`;
+                questionElement.innerHTML = `<img src="${data.question}" class="handwritten-img" alt="Handwritten Letter">`;
             } else {
                 questionElement.textContent = data.question;
             }
 
             data.choices.forEach(choice => {
-                const button = document.createElement('button');
-                button.innerHTML = choice.endsWith('.svg') ? `<img src="${choice}" class="img-fluid" alt="Handwritten Letter">` : choice;
-                button.className = "btn btn-primary btn-block";
-                button.onclick = () => checkAnswer(choice, data.correct);
-                choicesElement.appendChild(button);
+                let element;
+                if (choice.endsWith('.ogg')) {
+                    element = document.createElement('audio');
+                    element.controls = true;
+                    element.src = choice;
+                    element.className = "btn btn-primary btn-block";
+                } else if (choice.endsWith('.svg')) {
+                    element = document.createElement('button');
+                    element.innerHTML = `<img src="${choice}" class="handwritten-img" alt="Handwritten Letter">`;
+                    element.className = "btn btn-primary btn-block";
+                } else {
+                    element = document.createElement('button');
+                    element.textContent = choice;
+                    element.className = "btn btn-primary btn-block";
+                }
+                element.onclick = () => checkAnswer(choice, data.correct, data.all_categories);
+                choicesElement.appendChild(element);
             });
         }
 
-        function checkAnswer(choice, correct) {
+        function checkAnswer(choice, correct, allCategories) {
             const feedbackElement = document.getElementById('feedback');
             if (choice === correct) {
                 feedbackElement.textContent = 'Correct!';
                 feedbackElement.className = 'text-success';
+                setTimeout(fetchQuestion, 1500); // Fetch new question after 1.5 seconds
             } else {
-                feedbackElement.textContent = `Incorrect. The correct answer was: ${correct}`;
-                feedbackElement.className = 'text-danger';
+                displayCard(allCategories);
             }
+        }
 
-            setTimeout(fetchQuestion, 1500); // Fetch new question after 1.5 seconds
+        function displayCard(allCategories) {
+            const card = document.getElementById('infoCard');
+            card.style.display = 'block';
+
+            document.getElementById('cardUppercase').textContent = allCategories.uppercase;
+            document.getElementById('cardLowercase').textContent = allCategories.lowercase;
+            document.getElementById('cardTranscription').textContent = allCategories.transcription;
+            document.getElementById('cardHandwritten').innerHTML = `<img src="${allCategories.handwritten}" class="handwritten-img">`;
+            document.getElementById('cardPronunciation').innerHTML = `<audio controls src="${allCategories.pronunciation}"></audio>`;
+        }
+
+        function closeCard() {
+            document.getElementById('infoCard').style.display = 'none';
+            fetchQuestion();
         }
     </script>
 </head>
@@ -133,6 +159,17 @@
         <div id="question" class="mb-4"></div>
         <div id="choices"></div>
         <div id="feedback" class="mt-4"></div>
+
+        <!-- Info Card for Incorrect Answer -->
+        <div id="infoCard" class="card" style="display: none; padding: 20px;">
+            <h5>Correct Answer Details</h5>
+            <p><strong>Uppercase:</strong> <span id="cardUppercase"></span></p>
+            <p><strong>Lowercase:</strong> <span id="cardLowercase"></span></p>
+            <p><strong>Transcription:</strong> <span id="cardTranscription"></span></p>
+            <p><strong>Handwritten:</strong> <span id="cardHandwritten"></span></p>
+            <p><strong>Pronunciation:</strong> <span id="cardPronunciation"></span></p>
+            <button class="btn btn-primary" onclick="closeCard()">Next</button>
+        </div>
     </div>
 </body>
 </html>
