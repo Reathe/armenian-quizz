@@ -215,36 +215,33 @@ armenian_alphabet = {
     ],
 }
 
-
-def get_random_choices(category, correct_answer, num_choices=4):
-    choices = random.sample(armenian_alphabet[category], num_choices - 1)
+def get_random_choices(answer_category, correct_answer, num_choices=4):
+    choices = random.sample(armenian_alphabet[answer_category], num_choices - 1)
     if correct_answer not in choices:
         choices.append(correct_answer)
     random.shuffle(choices)
     return choices
 
-
-@app.route("/")
+@app.route('/')
 def index():
-    return render_template("quiz.html")
+    return render_template('quiz.html')
 
-
-@app.route("/get_question", methods=["POST"])
+@app.route('/get_question', methods=['POST'])
 def get_question():
-    category = request.form.get("category", default="uppercase")
-    correct_index = random.randint(0, len(armenian_alphabet[category]) - 1)
-    correct_answer = armenian_alphabet[category][correct_index]
+    question_category = request.form.get('category')
+    answer_category = request.form.get('answer_category')
 
-    if category == "pronunciation":
-        question = url_for("static", filename=f"sounds/{correct_answer}")
+    # Select the index based on the question category
+    correct_index = random.randint(0, len(armenian_alphabet[question_category]) - 1)
+    correct_answer = armenian_alphabet[answer_category][correct_index]
+
+    if question_category == 'pronunciation':
+        question = url_for('static', filename=f'sounds/{armenian_alphabet[question_category][correct_index]}')
     else:
-        question = correct_answer
+        question = armenian_alphabet[question_category][correct_index]
 
-    choices = get_random_choices(category, correct_answer)
-    return jsonify(
-        {"question": question, "choices": choices, "correct": correct_answer}
-    )
+    choices = get_random_choices(answer_category, correct_answer)
+    return jsonify({'question': question, 'choices': choices, 'correct': correct_answer})
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)

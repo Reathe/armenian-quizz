@@ -7,16 +7,26 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script>
         async function fetchQuestion() {
-            const category = document.querySelector('input[name="category"]:checked').value;
+            const questionCategory = getSelectedCategory('questionCategory');
+            const answerCategory = getSelectedCategory('answerCategory');
             const response = await fetch('/get_question', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `category=${category}`
+                body: `category=${questionCategory}&answer_category=${answerCategory}`
             });
             const data = await response.json();
             displayQuestion(data);
+        }
+
+        function getSelectedCategory(categoryName) {
+            const selectedValue = document.querySelector(`input[name="${categoryName}"]:checked`).value;
+            if (selectedValue === 'random') {
+                const categories = ['uppercase', 'lowercase', 'transcription', 'pronunciation'];
+                return categories[Math.floor(Math.random() * categories.length)];
+            }
+            return selectedValue;
         }
 
         function displayQuestion(data) {
@@ -58,24 +68,58 @@
 <body onload="fetchQuestion()">
     <div class="container">
         <h1>Armenian Alphabet Quiz</h1>
+
+        <!-- Question Category Selection -->
         <form class="mb-4">
+            <h5>Select Question Category:</h5>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="category" id="uppercase" value="uppercase" checked>
+                <input class="form-check-input" type="radio" name="questionCategory" id="uppercase" value="uppercase" checked>
                 <label class="form-check-label" for="uppercase">Uppercase</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="category" id="lowercase" value="lowercase">
+                <input class="form-check-input" type="radio" name="questionCategory" id="lowercase" value="lowercase">
                 <label class="form-check-label" for="lowercase">Lowercase</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="category" id="transcription" value="transcription">
+                <input class="form-check-input" type="radio" name="questionCategory" id="transcription" value="transcription">
                 <label class="form-check-label" for="transcription">Transcription</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="category" id="pronunciation" value="pronunciation">
+                <input class="form-check-input" type="radio" name="questionCategory" id="pronunciation" value="pronunciation">
                 <label class="form-check-label" for="pronunciation">Pronunciation</label>
             </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="questionCategory" id="randomQuestion" value="random">
+                <label class="form-check-label" for="randomQuestion">Random</label>
+            </div>
         </form>
+
+        <!-- Answer Category Selection -->
+        <form class="mb-4">
+            <h5>Select Answer Category:</h5>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="answerCategory" id="uppercaseAnswer" value="uppercase" checked>
+                <label class="form-check-label" for="uppercaseAnswer">Uppercase</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="answerCategory" id="lowercaseAnswer" value="lowercase">
+                <label class="form-check-label" for="lowercaseAnswer">Lowercase</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="answerCategory" id="transcriptionAnswer" value="transcription">
+                <label class="form-check-label" for="transcriptionAnswer">Transcription</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="answerCategory" id="pronunciationAnswer" value="pronunciation">
+                <label class="form-check-label" for="pronunciationAnswer">Pronunciation</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="answerCategory" id="randomAnswer" value="random">
+                <label class="form-check-label" for="randomAnswer">Random</label>
+            </div>
+        </form>
+
+        <!-- Display Question and Choices -->
         <div id="question" class="mb-4"></div>
         <div id="choices"></div>
         <div id="feedback" class="mt-4"></div>
