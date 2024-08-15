@@ -90,7 +90,7 @@ armenian_alphabet = {
         "օ",
         "ֆ",
     ],
-    "transliteration": [
+    "transcription": [
         "a",
         "b",
         "g",
@@ -131,7 +131,7 @@ armenian_alphabet = {
         "o",
         "f",
     ],
-    "audio_file": [
+    "pronunciation": [
         "Hy-ա.ogg",
         "Hy-բ.ogg",
         "Hy-գ.ogg",
