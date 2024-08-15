@@ -26,7 +26,7 @@ label {
 
 #question {
     margin: 20px 0;
-    font-size: 1.5rem;
+    font-size: 3rem;
     text-align: center;
     color: #007bff;
 }
@@ -55,4 +55,20 @@ button:hover {
     height: auto;
     display: block;
     margin: 0 auto;
+}
+
+/* Custom styles for the options */
+/* make them display side by side with a small margin between them */
+.options {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.form-check-input {
+    size-adjust: auto;
+}
+
+.form-check-label {
+    font-size: small;
 }

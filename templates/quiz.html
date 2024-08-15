@@ -47,9 +47,9 @@
             data.choices.forEach(choice => {
                 let element;
                 if (choice.endsWith('.ogg')) {
-                    element = document.createElement('audio');
-                    element.controls = true;
-                    element.src = choice;
+                    // Create audio element for pronunciation inside of a button
+                    element = document.createElement('button');
+                    element.innerHTML = `<audio controls src="${choice}"></audio>`;
                     element.className = "btn btn-primary btn-block";
                 } else if (choice.endsWith('.svg')) {
                     element = document.createElement('button');
@@ -67,11 +67,15 @@
 
         function checkAnswer(choice, correct, allCategories) {
             const feedbackElement = document.getElementById('feedback');
+            const choicesElement = document.getElementById('choices');
             if (choice === correct) {
                 feedbackElement.textContent = 'Correct!';
                 feedbackElement.className = 'text-success';
                 setTimeout(fetchQuestion, 1500); // Fetch new question after 1.5 seconds
             } else {
+                feedbackElement.textContent = 'Incorrect!';
+                feedbackElement.className = 'text-danger';
+                choicesElement.innerHTML = '';  // Remove answer buttons
                 displayCard(allCategories);
             }
         }
@@ -98,6 +102,7 @@
         <h1>Armenian Alphabet Quiz</h1>
 
         <!-- Question Category Selection -->
+        <div class="options">
         <form class="mb-4">
             <h5>Select Question Category:</h5>
             <div class="form-check form-check-inline">
@@ -154,7 +159,7 @@
                 <label class="form-check-label" for="randomAnswer">Random</label>
             </div>
         </form>
-
+        </div>
         <!-- Display Question and Choices -->
         <div id="question" class="mb-4"></div>
         <div id="choices"></div>

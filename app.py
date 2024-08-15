@@ -1,4 +1,3 @@
-import os
 import random
 
 from flask import Flask, jsonify, redirect, render_template, request, url_for
@@ -215,48 +214,82 @@ armenian_alphabet = {
     ],
 }
 
+
 def get_random_choices(answer_category, correct_answer, num_choices=4):
-    choices = random.sample(armenian_alphabet[answer_category], num_choices - 1)
+    choices = random.sample(armenian_alphabet[answer_category], num_choices)
     if correct_answer not in choices:
+        choices.pop()
         choices.append(correct_answer)
     random.shuffle(choices)
     return choices
 
-@app.route('/')
-def index():
-    return render_template('quiz.html')
 
-@app.route('/get_question', methods=['POST'])
+@app.route("/")
+def index():
+    return render_template("quiz.html")
+
+
+@app.route("/get_question", methods=["POST"])
 def get_question():
-    question_category = request.form.get('category')
-    answer_category = request.form.get('answer_category')
+    question_category = request.form.get("category")
+    answer_category = request.form.get("answer_category")
+    if question_category is None or answer_category is None:
+        return redirect(url_for("index"))
 
     correct_index = random.randint(0, len(armenian_alphabet[question_category]) - 1)
     correct_answer = armenian_alphabet[answer_category][correct_index]
 
-    if question_category == 'pronunciation':
-        question = url_for('static', filename=f'sounds/{armenian_alphabet[question_category][correct_index]}')
-    elif question_category == 'handwritten':
-        question = url_for('static', filename=f'handwritten/{armenian_alphabet[question_category][correct_index]}')
+    if question_category == "pronunciation":
+        question = url_for(
+            "static",
+            filename=f"sounds/{armenian_alphabet[question_category][correct_index]}",
+        )
+    elif question_category == "handwritten":
+        question = url_for(
+            "static",
+            filename=f"handwritten/{armenian_alphabet[question_category][correct_index]}",
+        )
     else:
         question = armenian_alphabet[question_category][correct_index]
 
-    if answer_category == 'handwritten':
-        choices = [url_for('static', filename=f'handwritten/{choice}') for choice in get_random_choices(answer_category, correct_answer)]
-    elif answer_category == 'pronunciation':
-        choices = [url_for('static', filename=f'sounds/{choice}') for choice in get_random_choices(answer_category, correct_answer)]
+    if answer_category == "handwritten":
+        choices = [
+            url_for("static", filename=f"handwritten/{choice}")
+            for choice in get_random_choices(answer_category, correct_answer)
+        ]
+        correct_answer = url_for("static", filename=f"handwritten/{correct_answer}")
+    elif answer_category == "pronunciation":
+        choices = [
+            url_for("static", filename=f"sounds/{choice}")
+            for choice in get_random_choices(answer_category, correct_answer)
+        ]
+        correct_answer = url_for("static", filename=f"sounds/{correct_answer}")
     else:
         choices = get_random_choices(answer_category, correct_answer)
 
     all_categories = {
-        'uppercase': armenian_alphabet['uppercase'][correct_index],
-        'lowercase': armenian_alphabet['lowercase'][correct_index],
-        'transcription': armenian_alphabet['transcription'][correct_index],
-        'handwritten': url_for('static', filename=f'handwritten/{armenian_alphabet["handwritten"][correct_index]}'),
-        'pronunciation': url_for('static', filename=f'sounds/{armenian_alphabet["pronunciation"][correct_index]}')
+        "uppercase": armenian_alphabet["uppercase"][correct_index],
+        "lowercase": armenian_alphabet["lowercase"][correct_index],
+        "transcription": armenian_alphabet["transcription"][correct_index],
+        "handwritten": url_for(
+            "static",
+            filename=f'handwritten/{armenian_alphabet["handwritten"][correct_index]}',
+        ),
+        "pronunciation": url_for(
+            "static",
+            filename=f'sounds/{armenian_alphabet["pronunciation"][correct_index]}',
+        ),
     }
 
-    return jsonify({'question': question, 'choices': choices, 'correct': correct_answer, 'all_categories': all_categories})
+    return jsonify(
+        {
+            "question": question,
+            "choices": choices,
+            "correct": correct_answer,
+            "all_categories": all_categories,
+        }
+    )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(debug=True)
