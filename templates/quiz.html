@@ -23,7 +23,7 @@
         function getSelectedCategory(categoryName) {
             const selectedValue = document.querySelector(`input[name="${categoryName}"]:checked`).value;
             if (selectedValue === 'random') {
-                const categories = ['uppercase', 'lowercase', 'transcription', 'pronunciation'];
+                const categories = ['uppercase', 'lowercase', 'transcription', 'pronunciation', 'handwritten'];
                 return categories[Math.floor(Math.random() * categories.length)];
             }
             return selectedValue;
@@ -38,13 +38,15 @@
 
             if (data.question.endsWith('.ogg')) {
                 questionElement.innerHTML = `<audio controls src="${data.question}"></audio>`;
+            } else if (data.question.endsWith('.svg')) {
+                questionElement.innerHTML = `<img src="${data.question}" class="img-fluid" alt="Handwritten Letter">`;
             } else {
                 questionElement.textContent = data.question;
             }
 
             data.choices.forEach(choice => {
                 const button = document.createElement('button');
-                button.textContent = choice;
+                button.innerHTML = choice.endsWith('.svg') ? `<img src="${choice}" class="img-fluid" alt="Handwritten Letter">` : choice;
                 button.className = "btn btn-primary btn-block";
                 button.onclick = () => checkAnswer(choice, data.correct);
                 choicesElement.appendChild(button);
@@ -89,6 +91,10 @@
                 <label class="form-check-label" for="pronunciation">Pronunciation</label>
             </div>
             <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="questionCategory" id="handwritten" value="handwritten">
+                <label class="form-check-label" for="handwritten">Handwritten</label>
+            </div>
+            <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="questionCategory" id="randomQuestion" value="random">
                 <label class="form-check-label" for="randomQuestion">Random</label>
             </div>
@@ -112,6 +118,10 @@
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="answerCategory" id="pronunciationAnswer" value="pronunciation">
                 <label class="form-check-label" for="pronunciationAnswer">Pronunciation</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="answerCategory" id="handwrittenAnswer" value="handwritten">
+                <label class="form-check-label" for="handwrittenAnswer">Handwritten</label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="answerCategory" id="randomAnswer" value="random">
