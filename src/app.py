@@ -1,6 +1,7 @@
 import random
 
 from flask import Flask, jsonify, redirect, render_template, request, url_for
+from waitress import serve
 
 app = Flask(__name__)
 
@@ -292,4 +293,4 @@ def get_question():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    serve(app)

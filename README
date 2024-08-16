@@ -1,0 +1,6 @@
+services:
+  ratflix-bot:
+    image: reathe/armenian-alphabet
+    container_name: armenian-alphabet
+    restart: unless-stopped
+
