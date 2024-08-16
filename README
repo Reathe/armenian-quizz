@@ -1,3 +1,16 @@
+# Armenian Alphabet
+
+How to build the container for oracle linux:
+
+```
+docker login
+docker build --platform linux/arm64/v8 -t reathe/armenian-alphabet .
+docker push reathe/armenian-alphabet
+```
+
+How to run the container:
+
+```yml
 services:
   armenian-alphabet:
     image: reathe/armenian-alphabet
@@ -5,3 +18,4 @@ services:
     restart: unless-stopped
     ports:
       - "3740:3740"
+```
