@@ -293,4 +293,4 @@ def get_question():
 
 
 if __name__ == "__main__":
-    serve(app)
+    serve(app, port=3740)
