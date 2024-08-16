@@ -66,14 +66,35 @@ button:hover {
     margin: 0 auto;
 }
 
-/* Custom styles for the options */
-/* make them display side by side with a small margin between them */
+.collapsible {
+    background-color: #eee;
+    color: #007bff;
+    cursor: pointer;
+    padding: 18px;
+    width: 30%;
+    border: none;
+    text-align: center;
+    font-size: 2rem;
+    align-self: auto;
+  }
+
 .options {
-    display: flex;
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
     justify-content: space-between;
     gap: 10px;
     size-adjust: auto;
 }
+
+.form-check-input {
+    size-adjust: auto;
+}
+
+.form-check-label {
+    font-size: small;
+}
+
 
 .form-check-input {
     size-adjust: auto;
