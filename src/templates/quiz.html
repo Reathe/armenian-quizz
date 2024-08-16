@@ -3,6 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
     <title>Armenian Alphabet Quiz</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script>
@@ -37,9 +38,9 @@
             feedbackElement.textContent = ''; // Clear feedback
 
             if (data.question.endsWith('.ogg')) {
-                questionElement.innerHTML = `<audio controls src="${data.question}"></audio>`;
+                questionElement.innerHTML = `<audio controls src="${data.question}" class="w-100"></audio>`;
             } else if (data.question.endsWith('.svg')) {
-                questionElement.innerHTML = `<img src="${data.question}" class="handwritten-img" alt="Handwritten Letter">`;
+                questionElement.innerHTML = `<img src="${data.question}" class="handwritten-img img-fluid mx-auto d-block" alt="Handwritten Letter">`;
             } else {
                 questionElement.textContent = data.question;
             }
@@ -47,18 +48,17 @@
             data.choices.forEach(choice => {
                 let element;
                 if (choice.endsWith('.ogg')) {
-                    // Create audio element for pronunciation inside of a button
                     element = document.createElement('button');
-                    element.innerHTML = `<audio controls src="${choice}"></audio>`;
-                    element.className = "btn btn-primary btn-block";
+                    element.innerHTML = `<audio controls src="${choice}" class="w-100"></audio>`;
+                    element.className = "btn btn-primary btn-block mb-2";
                 } else if (choice.endsWith('.svg')) {
                     element = document.createElement('button');
-                    element.innerHTML = `<img src="${choice}" class="handwritten-img" alt="Handwritten Letter">`;
-                    element.className = "btn btn-primary btn-block";
+                    element.innerHTML = `<img src="${choice}" class="handwritten-img img-fluid mx-auto d-block" alt="Handwritten Letter">`;
+                    element.className = "btn btn-primary btn-block mb-2";
                 } else {
                     element = document.createElement('button');
                     element.textContent = choice;
-                    element.className = "btn btn-primary btn-block";
+                    element.className = "btn btn-primary btn-block mb-2";
                 }
                 element.onclick = () => checkAnswer(choice, data.correct, data.all_categories);
                 choicesElement.appendChild(element);
@@ -87,8 +87,8 @@
             document.getElementById('cardUppercase').textContent = allCategories.uppercase;
             document.getElementById('cardLowercase').textContent = allCategories.lowercase;
             document.getElementById('cardTranscription').textContent = allCategories.transcription;
-            document.getElementById('cardHandwritten').innerHTML = `<img src="${allCategories.handwritten}" class="handwritten-img">`;
-            document.getElementById('cardPronunciation').innerHTML = `<audio controls src="${allCategories.pronunciation}"></audio>`;
+            document.getElementById('cardHandwritten').innerHTML = `<img src="${allCategories.handwritten}" class="handwritten-img img-fluid mx-auto d-block">`;
+            document.getElementById('cardPronunciation').innerHTML = `<audio controls src="${allCategories.pronunciation}" class="w-100"></audio>`;
         }
 
         function closeCard() {
@@ -99,76 +99,78 @@
 </head>
 <body onload="fetchQuestion()">
     <div class="container">
-        <h1>Armenian Alphabet Quiz</h1>
+        <h1 class="text-center mb-4">Armenian Alphabet Quiz</h1>
 
-        <!-- Question Category Selection -->
+        <!-- Collapsible Options Section -->
         <button type="button" class="collapsible">Options</button>
         <div class="options">
-        <form class="mb-4">
-            <h5>Select Question Category:</h5>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="questionCategory" id="uppercase" value="uppercase">
-                <label class="form-check-label" for="uppercase">Uppercase</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="questionCategory" id="lowercase" value="lowercase">
-                <label class="form-check-label" for="lowercase">Lowercase</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="questionCategory" id="transcription" value="transcription">
-                <label class="form-check-label" for="transcription">Transcription</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="questionCategory" id="pronunciation" value="pronunciation">
-                <label class="form-check-label" for="pronunciation">Pronunciation</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="questionCategory" id="handwritten" value="handwritten">
-                <label class="form-check-label" for="handwritten">Handwritten</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="questionCategory" id="randomQuestion" value="random" checked>
-                <label class="form-check-label" for="randomQuestion">Random</label>
-            </div>
-        </form>
+            <!-- Question Category Selection -->
+            <form class="mb-4">
+                <h5>Select Question Category:</h5>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="questionCategory" id="uppercase" value="uppercase">
+                    <label class="form-check-label" for="uppercase">Uppercase</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="questionCategory" id="lowercase" value="lowercase">
+                    <label class="form-check-label" for="lowercase">Lowercase</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="questionCategory" id="transcription" value="transcription">
+                    <label class="form-check-label" for="transcription">Transcription</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="questionCategory" id="pronunciation" value="pronunciation">
+                    <label class="form-check-label" for="pronunciation">Pronunciation</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="questionCategory" id="handwritten" value="handwritten">
+                    <label class="form-check-label" for="handwritten">Handwritten</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="questionCategory" id="randomQuestion" value="random" checked>
+                    <label class="form-check-label" for="randomQuestion">Random</label>
+                </div>
+            </form>
 
-        <!-- Answer Category Selection -->
-        <form class="mb-4">
-            <h5>Select Answer Category:</h5>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="answerCategory" id="uppercaseAnswer" value="uppercase">
-                <label class="form-check-label" for="uppercaseAnswer">Uppercase</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="answerCategory" id="lowercaseAnswer" value="lowercase">
-                <label class="form-check-label" for="lowercaseAnswer">Lowercase</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="answerCategory" id="transcriptionAnswer" value="transcription">
-                <label class="form-check-label" for="transcriptionAnswer">Transcription</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="answerCategory" id="pronunciationAnswer" value="pronunciation">
-                <label class="form-check-label" for="pronunciationAnswer">Pronunciation</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="answerCategory" id="handwrittenAnswer" value="handwritten">
-                <label class="form-check-label" for="handwrittenAnswer">Handwritten</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="answerCategory" id="randomAnswer" value="random" checked>
-                <label class="form-check-label" for="randomAnswer">Random</label>
-            </div>
-        </form>
+            <!-- Answer Category Selection -->
+            <form class="mb-4">
+                <h5>Select Answer Category:</h5>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answerCategory" id="uppercaseAnswer" value="uppercase">
+                    <label class="form-check-label" for="uppercaseAnswer">Uppercase</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answerCategory" id="lowercaseAnswer" value="lowercase">
+                    <label class="form-check-label" for="lowercaseAnswer">Lowercase</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answerCategory" id="transcriptionAnswer" value="transcription">
+                    <label class="form-check-label" for="transcriptionAnswer">Transcription</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answerCategory" id="pronunciationAnswer" value="pronunciation">
+                    <label class="form-check-label" for="pronunciationAnswer">Pronunciation</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answerCategory" id="handwrittenAnswer" value="handwritten">
+                    <label class="form-check-label" for="handwrittenAnswer">Handwritten</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answerCategory" id="randomAnswer" value="random" checked>
+                    <label class="form-check-label" for="randomAnswer">Random</label>
+                </div>
+            </form>
         </div>
+
         <!-- Display Question and Choices -->
         <div id="question" class="mb-4"></div>
         <div id="choices"></div>
-        <div id="feedback" class="mt-4"></div>
+        <div id="feedback" class="mt-4 text-center"></div>
 
         <!-- Info Card for Incorrect Answer -->
-        <div id="infoCard" class="card" style="display: none; padding: 20px;">
-            <h5>Correct Answer Details</h5>
+        <div id="infoCard" class="card mt-4" style="display: none;">
+            <h5 class="text-center">Correct Answer Details</h5>
             <p><strong>Uppercase:</strong> <span id="cardUppercase"></span></p>
             <p><strong>Lowercase:</strong> <span id="cardLowercase"></span></p>
             <p><strong>Transcription:</strong> <span id="cardTranscription"></span></p>
@@ -177,21 +179,21 @@
             <button class="btn btn-primary" onclick="closeCard()">Next</button>
         </div>
     </div>
+
+    <!-- Collapsible Script -->
     <script>
         var coll = document.getElementsByClassName("collapsible");
-        var i;
-
-        for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "flex") {
-            content.style.display = "none";
-            } else {
-            content.style.display = "flex";
-            }
-        });
-        } 
+        for (var i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "flex") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "flex";
+                }
+            });
+        }
     </script>
 </body>
 </html>
