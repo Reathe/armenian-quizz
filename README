@@ -1,5 +1,7 @@
 services:
-  ratflix-bot:
+  armenian-alphabet:
     image: reathe/armenian-alphabet
     container_name: armenian-alphabet
     restart: unless-stopped
+    ports:
+      - "3740:3740"
