@@ -4,7 +4,7 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: fit-content;
     margin: 50px auto;
     background: #ffffff;
     padding: 20px;
@@ -15,28 +15,37 @@ body {
 h1 {
     text-align: center;
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: auto;
 }
 
 label {
     font-size: 1.2rem;
     color: #666;
-    margin-right: 10px;
+    margin-right: auto;
 }
 
 #question {
-    margin: 20px 0;
-    font-size: 3rem;
+    margin: auto;
+    font-size: auto;
     text-align: center;
     color: #007bff;
 }
 
+#choices {
+    margin: auto;
+    text-align: center;
+    color: #333;
+}
+#choices > button {
+
+}
+
 button {
     display: block;
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    font-size: 1.1rem;
+    width: 90%;
+    padding: 8%;
+    margin: 5%;
+    font-size: 1000%;
     color: #fff;
     background-color: #007bff;
     border: none;
@@ -51,7 +60,7 @@ button:hover {
 
 /* Custom styles for SVG images */
 .handwritten-img {
-    width: 100px; /* Adjust the size as needed */
+    width: auto; /* Adjust the size as needed */
     height: auto;
     display: block;
     margin: 0 auto;
@@ -63,6 +72,7 @@ button:hover {
     display: flex;
     justify-content: space-between;
     gap: 10px;
+    size-adjust: auto;
 }
 
 .form-check-input {
