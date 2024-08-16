@@ -8,4 +8,4 @@ RUN pip3 install -r requirements.txt
 # update PATH environment variable
 ENV PATH=/root/.local:$PATH
 COPY . .
-CMD ["python3", "app.py"]
+CMD ["python3", "src/app.py"]

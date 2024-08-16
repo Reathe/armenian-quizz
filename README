@@ -3,4 +3,3 @@ services:
     image: reathe/armenian-alphabet
     container_name: armenian-alphabet
     restart: unless-stopped
-
