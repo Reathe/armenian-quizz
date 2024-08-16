@@ -46,6 +46,10 @@ h1 {
     text-align: center;
 }
 
+#choices > button {
+    font-size: 3rem;
+}
+
 button {
     display: block;
     width: 100%;
