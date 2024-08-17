@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script>
         async function fetchQuestion() {
-            const questionCategory = getSelectedCategory('questionCategory', true);
-            const answerCategory = getSelectedCategory('answerCategory', false);
+            const questionCategory = getSelectedCategory('questionCategory', []);
+            const answerCategory = getSelectedCategory('answerCategory', [questionCategory, 'pronunciation']);
             const response = await fetch('/get_question', {
                 method: 'POST',
                 headers: {
@@ -21,12 +21,10 @@
             displayQuestion(data);
         }
 
-        function getSelectedCategory(categoryName, isQuestion) {
+        function getSelectedCategory(categoryName, excluded=[]) {
             const selectedValue = document.querySelector(`input[name="${categoryName}"]:checked`).value;
             if (selectedValue === 'random') {
-                const categories = isQuestion
-                    ? ['uppercase', 'lowercase', 'transcription', 'pronunciation', 'handwritten']
-                    : ['uppercase', 'lowercase', 'transcription', 'handwritten']; // Exclude pronunciation from answers
+                const categories = ['uppercase', 'lowercase', 'transcription', 'pronunciation', 'handwritten'].filter(category => !excluded.includes(category));
                 return categories[Math.floor(Math.random() * categories.length)];
             }
             return selectedValue;
