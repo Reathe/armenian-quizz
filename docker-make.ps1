@@ -1,5 +1,5 @@
 # Description: This script is used to build and push the docker image to the docker hub
-# Usage: docker-make.ps1 [OPTIONS] [prod|dev]
+# Usage: docker-make.ps1 [OPTIONS] [latest|dev]
 # Options:
 #   -b, --build: build the image
 #   -p, --push: push the image
@@ -7,12 +7,12 @@
 #   -h, --help: display the help message
 #   If no options are provided, the script will build the image
 # Arguments:
-#   prod: script uses the tag 'latest'
+#   latest: script uses the tag 'latest'
 #   dev: script uses the tag 'dev'
 #   If no arguments are provided, the script uses the tag 'dev'
 # Example:
 #   docker-make.ps1 -br dev
-#   docker-make.ps1 -bp prod
+#   docker-make.ps1 -bp latest
 
 
 # Parse the command line arguments
@@ -26,7 +26,7 @@ param (
 )
 
 function help {
-    Write-Host "Usage: docker-make.ps1 [OPTIONS] [prod|dev]"
+    Write-Host "Usage: docker-make.ps1 [OPTIONS] [latest|dev]"
     Write-Host "Options:"
     Write-Host "  -b, --build: build the image"
     Write-Host "  -p, --push: push the image"
@@ -34,12 +34,12 @@ function help {
     Write-Host "  -h, --help: display the help message"
     Write-Host "  If no options are provided, the script will build the image"
     Write-Host "Arguments:"
-    Write-Host "  prod: script uses the tag 'latest'"
+    Write-Host "  latest: script uses the tag 'latest'"
     Write-Host "  dev: script uses the tag 'dev'"
     Write-Host "  If no arguments are provided, the script uses the tag 'dev'"
     Write-Host "Example:"
     Write-Host "  docker-make.ps1 -br dev"
-    Write-Host "  docker-make.ps1 -bp prod"
+    Write-Host "  docker-make.ps1 -bp latest"
 }
 
 if ($help) {
