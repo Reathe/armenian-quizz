@@ -123,14 +123,16 @@
 {% endblock %}
 {% block body_attributes %}onload="fetchQuestion()"{% endblock %}
 {% block body_content %}
-    <div class="container custom-width">
-        <h1 class="text-center mb-4">Quiz</h1>
-
+    <div class="container-sm">
+        <h1 id="title" class="text-center">Quiz</h1>
         <!-- Collapsible Options Section -->
-        <button type="button" class="collapsible">Options</button>
-        <div class="options">
-            <form class="mb-4">
-                <h5>Select Question Category:</h5>
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                aria-expanded="false">
+            Options
+        </button>
+        <div class="dropdown-menu">
+            <form class="dropdown-item">
+                <h5>Question Category:</h5>
                 {% for category in ["uppercase", "lowercase", "transcription", "pronunciation", "handwritten", "random"] %}
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="questionCategory" id="{{ category }}"
@@ -139,9 +141,9 @@
                     </div>
                 {% endfor %}
             </form>
-
-            <form class="mb-4">
-                <h5>Select Answer Category:</h5>
+            <hr class="dropdown-divider">
+            <form class="mb-4 dropdown-item">
+                <h5>Answer Category:</h5>
                 {% for category in ["uppercase", "lowercase", "transcription", "pronunciation", "handwritten", "random"] %}
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="answerCategory" id="{{ category }}"
@@ -154,9 +156,8 @@
         <hr/>
         <!-- Display Question and Choices -->
         <div id="question" class="mb-4"></div>
-        <div id="choices"></div>
-        <div id="feedback" class="mt-4 text-center"></div>
-
+        <div id="feedback" class="mb-2 text-center"></div>
+        <div id="choices" class="mt-2 d-grid"></div>
         <!-- Info Card for Incorrect Answer -->
         <div id="infoCard" class="card mt-4" style="display: none">
             <h5 class="text-center">Correct Answer Details</h5>
@@ -170,19 +171,4 @@
     </div>
 {% endblock %}
 {% block end_scripts %}
-    <!-- Collapsible Script -->
-    <script>
-        var coll = document.getElementsByClassName("collapsible");
-        for (var i = 0; i < coll.length; i++) {
-            coll[i].addEventListener("click", function () {
-                this.classList.toggle("active");
-                var content = this.nextElementSibling;
-                if (content.style.display === "flex") {
-                    content.style.display = "none";
-                } else {
-                    content.style.display = "flex";
-                }
-            });
-        }
-    </script>
 {% endblock %}
