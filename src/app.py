@@ -228,8 +228,7 @@ with app.app_context(), app.test_request_context():
 def get_random_choices(answer_category, correct_answer, num_choices=4):
     choices = random.sample(armenian_alphabet[answer_category], num_choices)
     if correct_answer not in choices:
-        choices.pop()
-        choices.append(correct_answer)
+        choices[-1] = correct_answer
     random.shuffle(choices)
     return choices
 
@@ -261,14 +260,7 @@ def get_question():
     correct_answer = armenian_alphabet[answer_category][correct_index]
     question = armenian_alphabet[question_category][correct_index]
     choices = get_random_choices(answer_category, correct_answer)
-
-    all_categories = {
-        "uppercase": armenian_alphabet["uppercase"][correct_index],
-        "lowercase": armenian_alphabet["lowercase"][correct_index],
-        "transcription": armenian_alphabet["transcription"][correct_index],
-        "handwritten": armenian_alphabet["handwritten"][correct_index],
-        "pronunciation": armenian_alphabet["pronunciation"][correct_index],
-    }
+    all_categories = {key: armenian_alphabet[key][correct_index] for key in armenian_alphabet}
 
     return jsonify(
         {
