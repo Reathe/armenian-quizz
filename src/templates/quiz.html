@@ -44,9 +44,9 @@
             feedbackElement.textContent = ""; // Clear feedback
 
             if (data.question.endsWith(".mp3")) {
-                questionElement.innerHTML = `<audio controls src="${data.question}" class="w-100"></audio>`;
+                questionElement.innerHTML = `<audio controls src="${data.question}" class="w-50"></audio>`;
             } else if (data.question.endsWith(".svg")) {
-                questionElement.innerHTML = `<img src="${data.question}" class="handwritten-img img-fluid mx-auto d-block" alt="Handwritten Letter">`;
+                questionElement.innerHTML = `<img src="${data.question}" class="handwritten-img img-fluid mx-auto d-block">`;
             } else {
                 questionElement.textContent = data.question;
             }
@@ -55,11 +55,11 @@
                 let element;
                 if (choice.endsWith(".mp3")) {
                     element = document.createElement("button");
-                    element.innerHTML = `<audio controls src="${choice}" class="w-100"></audio>`;
+                    element.innerHTML = `<audio controls src="${choice}" class="w-50"></audio>`;
                     element.className = "btn btn-primary btn-block mb-2";
                 } else if (choice.endsWith(".svg")) {
                     element = document.createElement("button");
-                    element.innerHTML = `<img src="${choice}" class="handwritten-img img-fluid mx-auto d-block" alt="Handwritten Letter">`;
+                    element.innerHTML = `<img src="${choice}" class="handwritten-img img-fluid mx-auto d-block">`;
                     element.className = "btn btn-primary btn-block mb-2";
                 } else {
                     element = document.createElement("button");
@@ -102,7 +102,7 @@
             ).innerHTML = `<img src="${allCategories.handwritten}" class="handwritten-img img-fluid mx-auto d-block">`;
             document.getElementById(
                 "cardPronunciation"
-            ).innerHTML = `<audio controls src="${allCategories.pronunciation}" class="w-100"></audio>`;
+            ).innerHTML = `<audio controls src="${allCategories.pronunciation}" class="w-50"></audio>`;
         }
 
         function closeCard() {
@@ -113,7 +113,7 @@
 {% endblock %}
 {% block body_attributes %}onload="fetchQuestion()"{% endblock %}
 {% block body_content %}
-    <div class="container">
+    <div class="container custom-width">
         <h1 class="text-center mb-4">Quiz</h1>
 
         <!-- Collapsible Options Section -->
@@ -132,11 +132,11 @@
 
             <form class="mb-4">
                 <h5>Select Answer Category:</h5>
-                {% for category in ["uppercase", "lowercase", "transcription", "handwritten", "random"] %}
+                {% for category in ["uppercase", "lowercase", "transcription", "pronunciation", "handwritten", "random"] %}
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="answerCategory" id="{{ category }}"
                                value="{{ category }}" {% if category == "random" %}checked{% endif %}/>
-                        <label class="form-check-label" for="{{ category }}Answer">{{ category|capitalize }}</label>
+                        <label class="form-check-label" for="{{ category }}">{{ category|capitalize }}</label>
                     </div>
                 {% endfor %}
             </form>
@@ -155,7 +155,7 @@
             <p><span id="cardTranscription"></span></p>
             <p><span id="cardHandwritten"></span></p>
             <p><span id="cardPronunciation"></span></p>
-            <button class="btn btn-primary btn-lg btn-block" onclick="closeCard()">Next</button>
+            <button class="btn btn-primary btn-lg" onclick="closeCard()">Next</button>
         </div>
     </div>
 {% endblock %}
