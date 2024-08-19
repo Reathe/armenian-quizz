@@ -69,10 +69,12 @@ button:hover {
 }
 
 .handwritten-img {
-    max-width: 100px;
-    height: auto;
-    margin: 0 auto;
-    display: block;
+    max-height: 7rem;
+    pointer-events: none;
+}
+
+.dark {
+    filter: invert(1);
 }
 
 #infoCard {

@@ -37,7 +37,13 @@
         }
 
         function innerHTML_for_SVG(svgURL) {
-            return `<img src="${svgURL}" class="handwritten-img img-fluid mx-auto d-block"/>`;
+            let class_name = "handwritten-img";
+            // if dark mode is on
+            if (document.documentElement.getAttribute("data-bs-theme") === "dark") {
+                class_name += " dark";
+            }
+            let url = `<img src="${svgURL}" class="${class_name}"/>`
+            return url;
         }
 
         function innerHTML_foraudio(audioURL) {
