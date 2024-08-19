@@ -124,7 +124,7 @@
                 {% for category in ["uppercase", "lowercase", "transcription", "pronunciation", "handwritten", "random"] %}
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="questionCategory" id="{{ category }}"
-                               value="{{ category }}" {% if category == "randomQuestion" %}checked{% endif %}/>
+                               value="{{ category }}" {% if category == "random" %}checked{% endif %}/>
                         <label class="form-check-label" for="{{ category }}">{{ category|capitalize }}</label>
                     </div>
                 {% endfor %}
@@ -155,7 +155,7 @@
             <p><span id="cardTranscription"></span></p>
             <p><span id="cardHandwritten"></span></p>
             <p><span id="cardPronunciation"></span></p>
-            <button class="btn btn-primary" onclick="closeCard()">Next</button>
+            <button class="btn btn-primary btn-lg btn-block" onclick="closeCard()">Next</button>
         </div>
     </div>
 {% endblock %}
