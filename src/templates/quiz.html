@@ -1,283 +1,209 @@
 <!-- src/templates/quiz.html -->
 {% extends "base.html" %} {% block head_scripts %}
-    <script>
-        async function fetchQuestion() {
-            const questionCategory = getSelectedCategory("questionCategory", []);
-            const answerCategory = getSelectedCategory("answerCategory", [
-                questionCategory,
-                "pronunciation",
-            ]);
-            const response = await fetch("/get_question", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: `category=${questionCategory}&answer_category=${answerCategory}`,
-            });
-            const data = await response.json();
-            displayQuestion(data);
-        }
+<script>
+  async function fetchQuestion() {
+    const questionCategory = getSelectedCategory("questionCategory", []);
+    const answerCategory = getSelectedCategory("answerCategory", [
+      questionCategory,
+      "pronunciation",
+    ]);
+    const response = await fetch("/get_question", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `category=${questionCategory}&answer_category=${answerCategory}`,
+    });
+    const data = await response.json();
+    displayQuestion(data);
+  }
 
-        function getSelectedCategory(categoryName, excluded = []) {
-            const selectedValue = document.querySelector(
-                `input[name="${categoryName}"]:checked`
-            ).value;
-            if (selectedValue === "random") {
-                const categories = [
-                    "uppercase",
-                    "lowercase",
-                    "transcription",
-                    "pronunciation",
-                    "handwritten",
-                ].filter((category) => !excluded.includes(category));
-                return categories[Math.floor(Math.random() * categories.length)];
-            }
-            return selectedValue;
-        }
+  function getSelectedCategory(categoryName, excluded = []) {
+    const selectedValue = document.querySelector(
+      `input[name="${categoryName}"]:checked`
+    ).value;
+    if (selectedValue === "random") {
+      const categories = [
+        "uppercase",
+        "lowercase",
+        "transcription",
+        "pronunciation",
+        "handwritten",
+      ].filter((category) => !excluded.includes(category));
+      return categories[Math.floor(Math.random() * categories.length)];
+    }
+    return selectedValue;
+  }
 
-        function displayQuestion(data) {
-            const questionElement = document.getElementById("question");
-            const choicesElement = document.getElementById("choices");
-            const feedbackElement = document.getElementById("feedback");
-            choicesElement.innerHTML = "";
-            feedbackElement.textContent = ""; // Clear feedback
+  function displayQuestion(data) {
+    const questionElement = document.getElementById("question");
+    const choicesElement = document.getElementById("choices");
+    const feedbackElement = document.getElementById("feedback");
+    choicesElement.innerHTML = "";
+    feedbackElement.textContent = ""; // Clear feedback
 
-            if (data.question.endsWith(".mp3")) {
-                questionElement.innerHTML = `<audio controls src="${data.question}" class="w-100"></audio>`;
-            } else if (data.question.endsWith(".svg")) {
-                questionElement.innerHTML = `<img src="${data.question}" class="handwritten-img img-fluid mx-auto d-block" alt="Handwritten Letter">`;
-            } else {
-                questionElement.textContent = data.question;
-            }
+    if (data.question.endsWith(".mp3")) {
+      questionElement.innerHTML = `<audio controls src="${data.question}" class="w-100"></audio>`;
+    } else if (data.question.endsWith(".svg")) {
+      questionElement.innerHTML = `<img src="${data.question}" class="handwritten-img img-fluid mx-auto d-block" alt="Handwritten Letter">`;
+    } else {
+      questionElement.textContent = data.question;
+    }
 
-            data.choices.forEach((choice) => {
-                let element;
-                if (choice.endsWith(".mp3")) {
-                    element = document.createElement("button");
-                    element.innerHTML = `<audio controls src="${choice}" class="w-100"></audio>`;
-                    element.className = "btn btn-primary btn-block mb-2";
-                } else if (choice.endsWith(".svg")) {
-                    element = document.createElement("button");
-                    element.innerHTML = `<img src="${choice}" class="handwritten-img img-fluid mx-auto d-block" alt="Handwritten Letter">`;
-                    element.className = "btn btn-primary btn-block mb-2";
-                } else {
-                    element = document.createElement("button");
-                    element.textContent = choice;
-                    element.className = "btn btn-primary btn-block mb-2";
-                }
-                element.onclick = () =>
-                    checkAnswer(choice, data.correct, data.all_categories);
-                choicesElement.appendChild(element);
-            });
-        }
+    data.choices.forEach((choice) => {
+      let element;
+      if (choice.endsWith(".mp3")) {
+        element = document.createElement("button");
+        element.innerHTML = `<audio controls src="${choice}" class="w-100"></audio>`;
+        element.className = "btn btn-primary btn-block mb-2";
+      } else if (choice.endsWith(".svg")) {
+        element = document.createElement("button");
+        element.innerHTML = `<img src="${choice}" class="handwritten-img img-fluid mx-auto d-block" alt="Handwritten Letter">`;
+        element.className = "btn btn-primary btn-block mb-2";
+      } else {
+        element = document.createElement("button");
+        element.textContent = choice;
+        element.className = "btn btn-primary btn-block mb-2";
+      }
+      element.onclick = () =>
+        checkAnswer(choice, data.correct, data.all_categories);
+      choicesElement.appendChild(element);
+    });
+  }
 
-        function checkAnswer(choice, correct, allCategories) {
-            const feedbackElement = document.getElementById("feedback");
-            const choicesElement = document.getElementById("choices");
-            if (choice === correct) {
-                feedbackElement.textContent = "Correct!";
-                feedbackElement.className = "text-success";
-                setTimeout(fetchQuestion, 1500); // Fetch new question after 1.5 seconds
-            } else {
-                feedbackElement.textContent = "Incorrect!";
-                feedbackElement.className = "text-danger";
-                choicesElement.innerHTML = ""; // Remove answer buttons
-                displayCard(allCategories);
-            }
-        }
+  function checkAnswer(choice, correct, allCategories) {
+    const feedbackElement = document.getElementById("feedback");
+    const choicesElement = document.getElementById("choices");
+    if (choice === correct) {
+      feedbackElement.textContent = "Correct!";
+      feedbackElement.className = "text-success";
+      setTimeout(fetchQuestion, 1500); // Fetch new question after 1.5 seconds
+    } else {
+      feedbackElement.textContent = "Incorrect!";
+      feedbackElement.className = "text-danger";
+      choicesElement.innerHTML = ""; // Remove answer buttons
+      displayCard(allCategories);
+    }
+  }
 
-        function displayCard(allCategories) {
-            const card = document.getElementById("infoCard");
-            card.style.display = "block";
+  function displayCard(allCategories) {
+    const card = document.getElementById("infoCard");
+    card.style.display = "block";
 
-            document.getElementById("cardUppercase").textContent =
-                allCategories.uppercase;
-            document.getElementById("cardLowercase").textContent =
-                allCategories.lowercase;
-            document.getElementById("cardTranscription").textContent =
-                allCategories.transcription;
-            document.getElementById(
-                "cardHandwritten"
-            ).innerHTML = `<img src="${allCategories.handwritten}" class="handwritten-img img-fluid mx-auto d-block">`;
-            document.getElementById(
-                "cardPronunciation"
-            ).innerHTML = `<audio controls src="${allCategories.pronunciation}" class="w-100"></audio>`;
-        }
+    document.getElementById("cardUppercase").textContent =
+      allCategories.uppercase;
+    document.getElementById("cardLowercase").textContent =
+      allCategories.lowercase;
+    document.getElementById("cardTranscription").textContent =
+      allCategories.transcription;
+    document.getElementById(
+      "cardHandwritten"
+    ).innerHTML = `<img src="${allCategories.handwritten}" class="handwritten-img img-fluid mx-auto d-block">`;
+    document.getElementById(
+      "cardPronunciation"
+    ).innerHTML = `<audio controls src="${allCategories.pronunciation}" class="w-100"></audio>`;
+  }
 
-        function closeCard() {
-            document.getElementById("infoCard").style.display = "none";
-            fetchQuestion();
-        }
-    </script>
+  function closeCard() {
+    document.getElementById("infoCard").style.display = "none";
+    fetchQuestion();
+  }
+</script>
 {% endblock %} {% block body_attributes %}onload="fetchQuestion()"{% endblock %}
 {% block body_content %}
-    <div class="container">
-        <h1 class="text-center mb-4">Quiz</h1>
+<div class="container">
+  <h1 class="text-center mb-4">Quiz</h1>
 
-        <!-- Collapsible Options Section -->
-        <button type="button" class="collapsible">Options</button>
-        <div class="options">
-            <!-- Question Category Selection -->
-            <form class="mb-4">
-                <h5>Select Question Category:</h5>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="questionCategory"
-                            id="uppercase"
-                            value="uppercase"
-                    />
-                    <label class="form-check-label" for="uppercase">Uppercase</label>
-                </div>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="questionCategory"
-                            id="lowercase"
-                            value="lowercase"
-                    />
-                    <label class="form-check-label" for="lowercase">Lowercase</label>
-                </div>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="questionCategory"
-                            id="transcription"
-                            value="transcription"
-                    />
-                    <label class="form-check-label" for="transcription"
-                    >Transcription</label
-                    >
-                </div>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="questionCategory"
-                            id="pronunciation"
-                            value="pronunciation"
-                    />
-                    <label class="form-check-label" for="pronunciation"
-                    >Pronunciation</label
-                    >
-                </div>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="questionCategory"
-                            id="handwritten"
-                            value="handwritten"
-                    />
-                    <label class="form-check-label" for="handwritten">Handwritten</label>
-                </div>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="questionCategory"
-                            id="randomQuestion"
-                            value="random"
-                            checked
-                    />
-                    <label class="form-check-label" for="randomQuestion">Random</label>
-                </div>
-            </form>
+  <!-- Collapsible Options Section -->
+  <button type="button" class="collapsible">Options</button>
+  <div class="options">
+    <!-- Question Category Selection -->
+    <form class="mb-4">
+      <h5>Select Question Category:</h5>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="questionCategory" id="uppercase" value="uppercase" />
+        <label class="form-check-label" for="uppercase">Uppercase</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="questionCategory" id="lowercase" value="lowercase" />
+        <label class="form-check-label" for="lowercase">Lowercase</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="questionCategory" id="transcription" value="transcription" />
+        <label class="form-check-label" for="transcription">Transcription</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="questionCategory" id="pronunciation" value="pronunciation" />
+        <label class="form-check-label" for="pronunciation">Pronunciation</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="questionCategory" id="handwritten" value="handwritten" />
+        <label class="form-check-label" for="handwritten">Handwritten</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="questionCategory" id="randomQuestion" value="random"
+          checked />
+        <label class="form-check-label" for="randomQuestion">Random</label>
+      </div>
+    </form>
 
-            <!-- Answer Category Selection -->
-            <form class="mb-4">
-                <h5>Select Answer Category:</h5>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="answerCategory"
-                            id="uppercaseAnswer"
-                            value="uppercase"
-                    />
-                    <label class="form-check-label" for="uppercaseAnswer">Uppercase</label>
-                </div>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="answerCategory"
-                            id="lowercaseAnswer"
-                            value="lowercase"
-                    />
-                    <label class="form-check-label" for="lowercaseAnswer">Lowercase</label>
-                </div>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="answerCategory"
-                            id="transcriptionAnswer"
-                            value="transcription"
-                    />
-                    <label class="form-check-label" for="transcriptionAnswer"
-                    >Transcription</label
-                    >
-                </div>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="answerCategory"
-                            id="handwrittenAnswer"
-                            value="handwritten"
-                    />
-                    <label class="form-check-label" for="handwrittenAnswer"
-                    >Handwritten</label
-                    >
-                </div>
-                <div class="form-check">
-                    <input
-                            class="form-check-input"
-                            type="radio"
-                            name="answerCategory"
-                            id="randomAnswer"
-                            value="random"
-                            checked
-                    />
-                    <label class="form-check-label" for="randomAnswer">Random</label>
-                </div>
-            </form>
-        </div>
-        <hr/>
-        <!-- Display Question and Choices -->
-        <div id="question" class="mb-4"></div>
-        <div id="choices"></div>
-        <div id="feedback" class="mt-4 text-center"></div>
+    <!-- Answer Category Selection -->
+    <form class="mb-4">
+      <h5>Select Answer Category:</h5>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="answerCategory" id="uppercaseAnswer" value="uppercase" />
+        <label class="form-check-label" for="uppercaseAnswer">Uppercase</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="answerCategory" id="lowercaseAnswer" value="lowercase" />
+        <label class="form-check-label" for="lowercaseAnswer">Lowercase</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="answerCategory" id="transcriptionAnswer"
+          value="transcription" />
+        <label class="form-check-label" for="transcriptionAnswer">Transcription</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="answerCategory" id="handwrittenAnswer" value="handwritten" />
+        <label class="form-check-label" for="handwrittenAnswer">Handwritten</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="answerCategory" id="randomAnswer" value="random" checked />
+        <label class="form-check-label" for="randomAnswer">Random</label>
+      </div>
+    </form>
+  </div>
+  <hr />
+  <!-- Display Question and Choices -->
+  <div id="question" class="mb-4"></div>
+  <div id="choices"></div>
+  <div id="feedback" class="mt-4 text-center"></div>
 
-        <!-- Info Card for Incorrect Answer -->
-        <div id="infoCard" class="card mt-4" style="display: none">
-            <h5 class="text-center">Correct Answer Details</h5>
-            <p><span id="cardUppercase"></span></p>
-            <p><span id="cardLowercase"></span></p>
-            <p><span id="cardTranscription"></span></p>
-            <p><span id="cardHandwritten"></span></p>
-            <p><span id="cardPronunciation"></span></p>
-            <button class="btn btn-primary" onclick="closeCard()">Next</button>
-        </div>
-    </div>
+  <!-- Info Card for Incorrect Answer -->
+  <div id="infoCard" class="card mt-4" style="display: none">
+    <h5 class="text-center">Correct Answer Details</h5>
+    <p><span id="cardUppercase"></span></p>
+    <p><span id="cardLowercase"></span></p>
+    <p><span id="cardTranscription"></span></p>
+    <p><span id="cardHandwritten"></span></p>
+    <p><span id="cardPronunciation"></span></p>
+    <button class="btn btn-primary" onclick="closeCard()">Next</button>
+  </div>
+</div>
 {% endblock %} {% block end_scripts %}
-    <!-- Collapsible Script -->
-    <script>
-        var coll = document.getElementsByClassName("collapsible");
-        for (var i = 0; i < coll.length; i++) {
-            coll[i].addEventListener("click", function () {
-                this.classList.toggle("active");
-                var content = this.nextElementSibling;
-                if (content.style.display === "flex") {
-                    content.style.display = "none";
-                } else {
-                    content.style.display = "flex";
-                }
-            });
-        }
-    </script>
+<!-- Collapsible Script -->
+<script>
+  var coll = document.getElementsByClassName("collapsible");
+  for (var i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function () {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "flex") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "flex";
+      }
+    });
+  }
+</script>
 {% endblock %}
