@@ -1,5 +1,6 @@
 <!-- src/templates/quiz.html -->
-{% extends "base.html" %} {% block head_scripts %}
+{% extends "base.html" %}
+{% block head_scripts %}
 <script>
   async function fetchQuestion() {
     const questionCategory = getSelectedCategory("questionCategory", []);
@@ -109,7 +110,8 @@
     fetchQuestion();
   }
 </script>
-{% endblock %} {% block body_attributes %}onload="fetchQuestion()"{% endblock %}
+{% endblock %}
+{% block body_attributes %}onload="fetchQuestion()"{% endblock %}
 {% block body_content %}
 <div class="container">
   <h1 class="text-center mb-4">Quiz</h1>
@@ -190,7 +192,8 @@
     <button class="btn btn-primary" onclick="closeCard()">Next</button>
   </div>
 </div>
-{% endblock %} {% block end_scripts %}
+{% endblock %} 
+{% block end_scripts %}
 <!-- Collapsible Script -->
 <script>
   var coll = document.getElementsByClassName("collapsible");

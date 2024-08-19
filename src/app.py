@@ -5,8 +5,7 @@ from waitress import serve
 
 app = Flask(__name__)
 
-# Easter armenian
-#
+# Eastern armenian alphabet
 armenian_alphabet = {
     "uppercase": [
         "Ա",
@@ -215,6 +214,16 @@ armenian_alphabet = {
     ],
 }
 
+with app.app_context(), app.test_request_context():
+    armenian_alphabet["pronunciation"] = [
+        url_for("static", filename=f"sounds/{file}")
+        for file in armenian_alphabet["pronunciation"]
+    ]
+    armenian_alphabet["handwritten"] = [
+        url_for("static", filename=f"handwritten/{file}")
+        for file in armenian_alphabet["handwritten"]
+    ]
+
 
 def get_random_choices(answer_category, correct_answer, num_choices=4):
     choices = random.sample(armenian_alphabet[answer_category], num_choices)
@@ -250,47 +259,15 @@ def get_question():
 
     correct_index = random.randint(0, len(armenian_alphabet[question_category]) - 1)
     correct_answer = armenian_alphabet[answer_category][correct_index]
-
-    if question_category == "pronunciation":
-        question = url_for(
-            "static",
-            filename=f"sounds/{armenian_alphabet[question_category][correct_index]}",
-        )
-    elif question_category == "handwritten":
-        question = url_for(
-            "static",
-            filename=f"handwritten/{armenian_alphabet[question_category][correct_index]}",
-        )
-    else:
-        question = armenian_alphabet[question_category][correct_index]
-
-    if answer_category == "handwritten":
-        choices = [
-            url_for("static", filename=f"handwritten/{choice}")
-            for choice in get_random_choices(answer_category, correct_answer)
-        ]
-        correct_answer = url_for("static", filename=f"handwritten/{correct_answer}")
-    elif answer_category == "pronunciation":
-        choices = [
-            url_for("static", filename=f"sounds/{choice}")
-            for choice in get_random_choices(answer_category, correct_answer)
-        ]
-        correct_answer = url_for("static", filename=f"sounds/{correct_answer}")
-    else:
-        choices = get_random_choices(answer_category, correct_answer)
+    question = armenian_alphabet[question_category][correct_index]
+    choices = get_random_choices(answer_category, correct_answer)
 
     all_categories = {
         "uppercase": armenian_alphabet["uppercase"][correct_index],
         "lowercase": armenian_alphabet["lowercase"][correct_index],
         "transcription": armenian_alphabet["transcription"][correct_index],
-        "handwritten": url_for(
-            "static",
-            filename=f'handwritten/{armenian_alphabet["handwritten"][correct_index]}',
-        ),
-        "pronunciation": url_for(
-            "static",
-            filename=f'sounds/{armenian_alphabet["pronunciation"][correct_index]}',
-        ),
+        "handwritten": armenian_alphabet["handwritten"][correct_index],
+        "pronunciation": armenian_alphabet["pronunciation"][correct_index],
     }
 
     return jsonify(
