@@ -227,7 +227,18 @@ def get_random_choices(answer_category, correct_answer, num_choices=4):
 
 @app.route("/")
 def index():
+    # redirect to the quiz page
+    return redirect(url_for("quiz"))
+
+
+@app.route("/quiz")
+def quiz():
     return render_template("quiz.html")
+
+
+@app.route("/options")
+def options():
+    return render_template("options.html")
 
 
 @app.route("/get_question", methods=["POST"])
