@@ -46,7 +46,7 @@
             return url;
         }
 
-        function innerHTML_foraudio(audioURL) {
+        function innerHTML_for_audio(audioURL) {
             return `<audio controls src="${audioURL}" class="w-40"/>`;
         }
 
@@ -58,7 +58,7 @@
             feedbackElement.textContent = ""; // Clear feedback
 
             if (data.question.endsWith(".mp3")) {
-                questionElement.innerHTML = innerHTML_foraudio(data.question);
+                questionElement.innerHTML = innerHTML_for_audio(data.question);
             } else if (data.question.endsWith(".svg")) {
                 questionElement.innerHTML = innerHTML_for_SVG(data.question);
             } else {
@@ -69,7 +69,7 @@
                 let element;
                 element = document.createElement("button");
                 if (choice.endsWith(".mp3")) {
-                    element.innerHTML = innerHTML_foraudio(choice);
+                    element.innerHTML = innerHTML_for_audio(choice);
                 } else if (choice.endsWith(".svg")) {
                     element.innerHTML = innerHTML_for_SVG(choice);
                 } else {
@@ -112,7 +112,7 @@
             ).innerHTML = innerHTML_for_SVG(allCategories.handwritten);
             document.getElementById(
                 "cardPronunciation"
-            ).innerHTML = innerHTML_foraudio(allCategories.pronunciation);
+            ).innerHTML = innerHTML_for_audio(allCategories.pronunciation);
         }
 
         function closeCard() {
