@@ -127,14 +127,12 @@
         <div class="card-body">
             <div class="d-grid grid title-option">
                 <h1 class="card-title">Quiz</h1>
-                <!-- Dropdown for Question and Answer Category
-                TODO: make the form not clickable so it isn't blue when you miss click a radio button
-                -->
+                <!-- Dropdown for Question and Answer Category -->
                 <div>
                     <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">Options
                     </button>
                     <div class="dropdown-menu">
-                        <form class="dropdown-item">
+                        <form class="dropdown-item-text">
                             <h5>Question Category:</h5>
                             {% for category in ["uppercase", "lowercase", "transcription", "pronunciation", "handwritten", "random"] %}
                                 <div class="form-check">
@@ -147,7 +145,7 @@
                             {% endfor %}
                         </form>
                         <hr class="dropdown-divider">
-                        <form class="dropdown-item">
+                        <form class="dropdown-item-text">
                             <h5>Answer Category:</h5>
                             {% for category in ["uppercase", "lowercase", "transcription", "pronunciation", "handwritten", "random"] %}
                                 <div class="form-check">
