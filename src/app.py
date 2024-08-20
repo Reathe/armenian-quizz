@@ -244,11 +244,6 @@ def quiz():
     return render_template("quiz.html")
 
 
-@app.route("/options")
-def options():
-    return render_template("options.html")
-
-
 @app.route("/get_question", methods=["POST"])
 def get_question():
     question_category = request.form.get("category")
