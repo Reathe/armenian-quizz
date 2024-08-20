@@ -1,3 +1,4 @@
+import os
 import random
 
 from flask import Flask, jsonify, redirect, render_template, request, url_for
@@ -267,4 +268,7 @@ def get_question():
     )
 
 
-serve(app, port=8080)
+if os.environ.get("FLASK_ENV") == "development":
+    app.run(debug=True, port=8080)
+else:
+    serve(app, port=8080)
