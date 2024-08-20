@@ -47,7 +47,7 @@
         }
 
         function innerHTML_foraudio(audioURL) {
-            return `<audio controls src="${audioURL}" class="w-50"/>`;
+            return `<audio controls src="${audioURL}" class="w-40"/>`;
         }
 
         function displayQuestion(data) {
@@ -88,7 +88,7 @@
             if (choice === correct) {
                 feedbackElement.textContent = "Correct!";
                 feedbackElement.className = "text-success";
-                setTimeout(fetchQuestion, 1500); // Fetch new question after 1.5 seconds
+                setTimeout(fetchQuestion, 600); // Fetch new question after 1.5 seconds
             } else {
                 feedbackElement.textContent = "Incorrect!";
                 feedbackElement.className = "text-danger";
@@ -123,50 +123,59 @@
 {% endblock %}
 {% block body_attributes %}onload="fetchQuestion()"{% endblock %}
 {% block body_content %}
-    <div class="container-sm">
-        <h1 id="title" class="text-center">Quiz</h1>
-        <!-- Collapsible Options Section -->
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-                aria-expanded="false">
-            Options
-        </button>
-        <div class="dropdown-menu">
-            <form class="dropdown-item">
-                <h5>Question Category:</h5>
-                {% for category in ["uppercase", "lowercase", "transcription", "pronunciation", "handwritten", "random"] %}
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="questionCategory" id="{{ category }}"
-                               value="{{ category }}" {% if category == "random" %}checked{% endif %}/>
-                        <label class="form-check-label" for="{{ category }}">{{ category|capitalize }}</label>
+    <div class="container-sm card mt-1 text-center">
+        <div class="card-body">
+            <div class="d-grid grid title-option">
+                <h1 class="card-title">Quiz</h1>
+                <!-- Dropdown for Question and Answer Category -->
+                <div>
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">Options
+                    </button>
+                    <div class="dropdown-menu">
+                        <form class="dropdown-item">
+                            <h5>Question Category:</h5>
+                            {% for category in ["uppercase", "lowercase", "transcription", "pronunciation", "handwritten", "random"] %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="questionCategory"
+                                           id="{{ category }}"
+                                           value="{{ category }}" {% if category == "random" %}checked{% endif %}/>
+                                    <label class="form-check-label"
+                                           for="{{ category }}">{{ category|capitalize }}</label>
+                                </div>
+                            {% endfor %}
+                        </form>
+                        <hr class="dropdown-divider">
+                        <form class="dropdown-item">
+                            <h5>Answer Category:</h5>
+                            {% for category in ["uppercase", "lowercase", "transcription", "pronunciation", "handwritten", "random"] %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="answerCategory"
+                                           id="{{ category }}"
+                                           value="{{ category }}" {% if category == "random" %}checked{% endif %}/>
+                                    <label class="form-check-label"
+                                           for="{{ category }}">{{ category|capitalize }}</label>
+                                </div>
+                            {% endfor %}
+                        </form>
                     </div>
-                {% endfor %}
-            </form>
-            <hr class="dropdown-divider">
-            <form class="mb-4 dropdown-item">
-                <h5>Answer Category:</h5>
-                {% for category in ["uppercase", "lowercase", "transcription", "pronunciation", "handwritten", "random"] %}
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="answerCategory" id="{{ category }}"
-                               value="{{ category }}" {% if category == "random" %}checked{% endif %}/>
-                        <label class="form-check-label" for="{{ category }}">{{ category|capitalize }}</label>
-                    </div>
-                {% endfor %}
-            </form>
-        </div>
-        <hr/>
-        <!-- Display Question and Choices -->
-        <div id="question" class="mb-4"></div>
-        <div id="feedback" class="mb-2 text-center"></div>
-        <div id="choices" class="mt-2 d-grid"></div>
-        <!-- Info Card for Incorrect Answer -->
-        <div id="infoCard" class="card mt-4" style="display: none">
-            <h5 class="text-center">Correct Answer Details</h5>
-            <p><span id="cardUppercase"></span></p>
-            <p><span id="cardLowercase"></span></p>
-            <p><span id="cardTranscription"></span></p>
-            <p><span id="cardHandwritten"></span></p>
-            <p><span id="cardPronunciation"></span></p>
-            <button class="btn btn-primary btn-lg" onclick="closeCard()">Next</button>
+                </div>
+            </div>
+            <hr/>
+            <!-- Display Question and Choices -->
+            <div id="question"></div>
+            <div id="feedback"></div>
+            <div id="choices" class="d-grid"></div>
+            <!-- Info Card for Incorrect Answer -->
+            <div id="infoCard" class="card mt-1" style="display: none">
+                <div class="card-body">
+                    <h5 class="card-title answer-card-title">Correct Answer Details</h5>
+                    <p><span id="cardUppercase"></span> <span id="cardLowercase"></span></p>
+                    <p><span id="cardHandwritten"></span></p>
+                    <p><span id="cardTranscription"></span></p>
+                    <p><span id="cardPronunciation"></span></p>
+                    <button class="btn btn-primary btn-lg" onclick="closeCard()">Next</button>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

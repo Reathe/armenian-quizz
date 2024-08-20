@@ -1,7 +1,10 @@
+.title-option {
+    grid-template-columns: 4fr 1fr;
+    grid-auto-flow: column;
+}
 
 #question {
     font-size: 5rem;
-    text-align: center;
 }
 
 #choices > button {
@@ -18,23 +21,34 @@
 }
 
 #infoCard {
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
 }
 
 #infoCard p {
     font-size: 3rem;
-    text-align: center;
+}
+
+hr {
+    margin-top: 0.8rem;
+    margin-bottom: -1rem;
 }
 
 #feedback {
     font-size: 1.5rem;
-    text-align: center;
 }
 
-@media (min-width: 1000px) {
-    .custom-width {
-        width: 60%;
+.answer-card-title {
+    margin-top: -2rem;
+}
+
+html {
+    font-size: calc((1vw + 1vh + 1vmin) * 0.5);
+}
+
+@media (max-width: 700px) {
+    html {
+        font-size: calc((1vw + 1vh + 1vmin));
     }
 }
