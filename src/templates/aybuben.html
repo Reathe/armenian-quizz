@@ -23,7 +23,7 @@
             let selectedCategory = "lowercase"
             alphabet[selectedCategory].forEach(function (letter, i) {
                 const button = document.getElementById(`letter${i}`);
-                button.setAttribute("data-bs-title", letter);
+                // button.setAttribute("data-bs-title", letter);
                 addToElement(button, letter);
                 for (let category in alphabet) {
                     const popoverCard = document.getElementById(`${category}${i}`);
@@ -46,9 +46,8 @@
                     <p id="pronunciation{{ i }}"></p>
                 </div>
             </div>
-            <a tabindex="0" id="letter{{ i }}" role="button" data-bs-trigger="focus"
-               class="btn btn-lg btn-secondary aybuben"
-               data-bs-toggle="popover" data-bs-title=" " data-bs-content="">
+            <a tabindex="0" id="letter{{ i }}" role="button" class="btn btn-lg btn-secondary aybuben"
+               data-bs-toggle="popover">
             </a>
         {% endfor %}
     </div>
