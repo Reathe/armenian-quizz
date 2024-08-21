@@ -35,7 +35,7 @@
     <div class="d-grid m-5" id="alphabet">
         {% for i in range(39) %}
             <div hidden>
-                <div class="" data-name="popover-content">
+                <div class="text-center" data-name="popover-content">
                     <p id="uppercase{{ i }}"></p>
                     <p id="lowercase{{ i }}"></p>
                     <p id="handwritten{{ i }}"></p>
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <a tabindex="0" id="letter{{ i }}" role="button" data-bs-trigger="focus"
-               class="btn btn-lg btn-danger aybuben"
+               class="btn btn-lg btn-secondary aybuben"
                data-bs-toggle="popover" data-bs-title=" " data-bs-content="">
             </a>
         {% endfor %}
