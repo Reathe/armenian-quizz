@@ -44,25 +44,12 @@
             const feedbackElement = document.getElementById("feedback");
             choicesElement.innerHTML = "";
             feedbackElement.textContent = ""; // Clear feedback
-
-            if (data.question.endsWith(".mp3")) {
-                questionElement.innerHTML = innerHTML_for_audio(data.question);
-            } else if (data.question.endsWith(".svg")) {
-                questionElement.innerHTML = innerHTML_for_SVG(data.question);
-            } else {
-                questionElement.textContent = data.question;
-            }
+            addToElement(questionElement, data.question);
 
             data.choices.forEach((choice) => {
                 let element;
                 element = document.createElement("button");
-                if (choice.endsWith(".mp3")) {
-                    element.innerHTML = innerHTML_for_audio(choice);
-                } else if (choice.endsWith(".svg")) {
-                    element.innerHTML = innerHTML_for_SVG(choice);
-                } else {
-                    element.textContent = choice;
-                }
+                addToElement(element, choice);
                 element.className = "btn btn-primary btn-block mb-2";
                 element.onclick = () =>
                     checkAnswer(choice, data.correct, data.all_categories);

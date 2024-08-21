@@ -27,5 +27,15 @@
             return `<audio controls src="${audioURL}" class="w-40"/>`;
         }
 
+        function addToElement(element, content) {
+            if (content.endsWith(".mp3")) {
+                element.innerHTML = innerHTML_for_audio(content);
+            } else if (content.endsWith(".svg")) {
+                element.innerHTML = innerHTML_for_SVG(content);
+            } else {
+                element.textContent = content;
+            }
+        }
+
     </script>
 {% endmacro %}
