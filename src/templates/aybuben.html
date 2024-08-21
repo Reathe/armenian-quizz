@@ -24,52 +24,50 @@
             alphabet[selectedCategory].forEach(function (letter, i) {
                 const button = document.getElementById(`letter${i}`);
                 // button.setAttribute("data-bs-title", letter);
-                for (let category in alphabet) {
-                    const popoverCard = document.getElementById(`${category}${i}`);
-                    addToElement(popoverCard, alphabet[category][i]);
-                }
                 addToElement(letter, button);
             });
         }
+
+        function showDetailsCard(i) {
+            const alphabet = JSON.parse(localStorage.alphabet);
+            for (let category in alphabet) {
+                const detailsCard = document.getElementById(category);
+                addToElement(alphabet[category][i], detailsCard);
+            }
+            $('#details-card').show();
+        }
+
+        function closeDetailsCard() {
+            $('#details-card').hide();
+        }
+
     </script>
 {% endblock %}
 {% block body_attributes %}onload="displayAlphabet()"{% endblock %}
 {% block body_content %}
     <div class="container">
         <h1 class="text-center m-2">Armenian Alphabet</h1>
-        <div class="mt-3" id="alphabet">
+        <div class="m-3 alphabet">
             {% for i in range(39) %}
-                <div hidden>
-                    <div class="aybuben d-flex flex-column text-center"
-                         data-name="popover-content{{ i }}">
-                        <span id="uppercase{{ i }}"></span>
-                        <span id="lowercase{{ i }}"></span>
-                        <span id="handwritten{{ i }}"></span>
-                        <span id="transcription{{ i }}"></span>
-                        <span id="pronunciation{{ i }}"></span>
-                    </div>
-                </div>
                 <a tabindex="0" id="letter{{ i }}" role="button"
                    class="btn btn-lg btn-primary aybuben"
-                   data-bs-toggle="popover" data-bs-container="body">
+                   data-bs-toggle="popover" data-bs-container="body" onclick="showDetailsCard({{ i }})">
                 </a>
             {% endfor %}
         </div>
     </div>
+    <div id="details-card" class="card position-fixed top-50 start-50 translate-middle">
+        <div class="aybuben-card d-flex flex-column card-body text-center">
+            <span><span id="uppercase"></span> <span id="lowercase"></span></span>
+            <span id="handwritten"></span>
+            <span id="transcription"></span>
+            <span id="pronunciation"></span>
+            <button class="btn btn-secondary btn-lg" onclick="closeDetailsCard()">Close</button>
+        </div>
+    </div>
 {% endblock %}
 {% block end_scripts_after %}
-    <script type='text/javascript'>
-        $(document).ready(function () {
-            const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-            const popoverList = [...popoverTriggerList].map(function (popoverTriggerEl, index) {
-                let options = {
-                    html: true,
-                    //html element
-                    //content: $("#popover-content")
-                    content: $('[data-name="popover-content' + index + '"]')
-                }
-                return new bootstrap.Popover(popoverTriggerEl, options)
-            })
-        })
+    <script>
+        closeDetailsCard()
     </script>
 {% endblock %}
