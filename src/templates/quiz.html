@@ -44,12 +44,12 @@
             const feedbackElement = document.getElementById("feedback");
             choicesElement.innerHTML = "";
             feedbackElement.textContent = ""; // Clear feedback
-            addToElement(questionElement, data.question);
+            addToElement(data.question, questionElement);
 
             data.choices.forEach((choice) => {
                 let element;
                 element = document.createElement("button");
-                addToElement(element, choice);
+                addToElement(choice, element);
                 element.className = "btn btn-primary btn-block mb-2";
                 element.onclick = () =>
                     checkAnswer(choice, data.correct, data.all_categories);

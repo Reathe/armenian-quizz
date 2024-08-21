@@ -24,11 +24,11 @@
             alphabet[selectedCategory].forEach(function (letter, i) {
                 const button = document.getElementById(`letter${i}`);
                 // button.setAttribute("data-bs-title", letter);
-                addToElement(button, letter);
                 for (let category in alphabet) {
                     const popoverCard = document.getElementById(`${category}${i}`);
                     addToElement(popoverCard, alphabet[category][i]);
                 }
+                addToElement(letter, button);
             });
         }
     </script>

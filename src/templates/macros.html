@@ -27,7 +27,7 @@
             return `<audio controls src="${audioURL}" class="object-fit-sm-contain audio"/>`;
         }
 
-        function addToElement(element, content) {
+        function addToElement(content, element) {
             if (content.endsWith(".mp3")) {
                 element.innerHTML = innerHTML_for_audio(content);
             } else if (content.endsWith(".svg")) {
