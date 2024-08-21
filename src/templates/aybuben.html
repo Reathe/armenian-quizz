@@ -35,21 +35,26 @@
 {% endblock %}
 {% block body_attributes %}onload="displayAlphabet()"{% endblock %}
 {% block body_content %}
-    <div class="d-grid m-5" id="alphabet">
-        {% for i in range(39) %}
-            <div hidden>
-                <div class="text-center" data-name="popover-content{{ i }}">
-                    <p id="uppercase{{ i }}"></p>
-                    <p id="lowercase{{ i }}"></p>
-                    <p id="handwritten{{ i }}"></p>
-                    <p id="transcription{{ i }}"></p>
-                    <p id="pronunciation{{ i }}"></p>
+    <div class="container">
+        <h1 class="text-center m-2">Armenian Alphabet</h1>
+        <div class="mt-3" id="alphabet">
+            {% for i in range(39) %}
+                <div hidden>
+                    <div class="aybuben d-flex flex-column text-center"
+                         data-name="popover-content{{ i }}">
+                        <span id="uppercase{{ i }}"></span>
+                        <span id="lowercase{{ i }}"></span>
+                        <span id="handwritten{{ i }}"></span>
+                        <span id="transcription{{ i }}"></span>
+                        <span id="pronunciation{{ i }}"></span>
+                    </div>
                 </div>
-            </div>
-            <a tabindex="0" id="letter{{ i }}" role="button" class="btn btn-lg btn-secondary aybuben"
-               data-bs-toggle="popover">
-            </a>
-        {% endfor %}
+                <a tabindex="0" id="letter{{ i }}" role="button"
+                   class="btn btn-lg btn-primary aybuben"
+                   data-bs-toggle="popover" data-bs-container="body">
+                </a>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
 {% block end_scripts_after %}
