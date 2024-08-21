@@ -1,6 +1,8 @@
 <!-- src/templates/aybuben.html -->
 {% extends "base.html" %}
+{% from "macros.html" import helper_innerHTML_functions with context %}
 {% block head_scripts %}
+    {{ helper_innerHTML_functions() }}
     <script>
         async function fetchAlphabet() {
             const response = await fetch("/get_alphabet", {
@@ -19,10 +21,10 @@
             alphabet[selectedCategory].forEach(function (letter, i) {
                 const card = document.getElementById(`letter${i}`);
                 card.setAttribute("data-bs-title", letter);
-                card.innerText = letter;
+                addToElement(card, letter);
                 for (let category in alphabet) {
                     const element = document.getElementById(`${category}${i}`);
-                    element.innerText = alphabet[category][i];
+                    addToElement(element, alphabet[category][i]);
                 }
             });
         }
@@ -43,7 +45,7 @@
             </div>
             <a tabindex="0" id="letter{{ i }}" role="button" data-bs-trigger="focus"
                class="btn btn-lg btn-danger aybuben"
-               data-bs-toggle="popover" data-bs-title="yes" data-bs-content="">
+               data-bs-toggle="popover" data-bs-title=" " data-bs-content="">
             </a>
         {% endfor %}
     </div>
