@@ -278,6 +278,11 @@ def get_question():
     )
 
 
+@app.route("/google6092c9f6782b7a3a.html")
+def google_site_verf():
+    return render_template("google6092c9f6782b7a3a.html")
+
+
 if os.environ.get("FLASK_ENV") == "development":
     app.run(debug=True, port=8080)
 else:
