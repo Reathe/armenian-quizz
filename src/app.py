@@ -1,7 +1,7 @@
 import os
 import random
 
-from flask import Flask, jsonify, redirect, render_template, request, url_for
+from flask import Flask, jsonify, redirect, render_template, request, url_for, send_from_directory
 from waitress import serve
 
 app = Flask(__name__)
@@ -281,6 +281,11 @@ def get_question():
 @app.route("/google6092c9f6782b7a3a.html")
 def google_site_verf():
     return render_template("google6092c9f6782b7a3a.html")
+
+
+@app.route('/sitemap.xml')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
 
 
 if os.environ.get("FLASK_ENV") == "development":
