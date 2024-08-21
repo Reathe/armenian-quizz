@@ -5,6 +5,8 @@
     {{ helper_innerHTML_functions() }}
     <script>
         async function fetchAlphabet() {
+            if (localStorage.alphabet)
+                return JSON.parse(localStorage.alphabet);
             const response = await fetch("/get_alphabet", {
                 method: "POST",
                 headers: {
@@ -12,25 +14,26 @@
                 }
             });
             const data = await response.json();
-            displayAlphabet(data);
+            localStorage.alphabet = JSON.stringify(data["alphabet"]);
+            return data["alphabet"];
         }
 
-        function displayAlphabet(data) {
+        async function displayAlphabet() {
+            const alphabet = await fetchAlphabet();
             let selectedCategory = "lowercase"
-            let alphabet = data["alphabet"];
             alphabet[selectedCategory].forEach(function (letter, i) {
-                const card = document.getElementById(`letter${i}`);
-                card.setAttribute("data-bs-title", letter);
-                addToElement(card, letter);
+                const button = document.getElementById(`letter${i}`);
+                button.setAttribute("data-bs-title", letter);
+                addToElement(button, letter);
                 for (let category in alphabet) {
-                    const element = document.getElementById(`${category}${i}`);
-                    addToElement(element, alphabet[category][i]);
+                    const popoverCard = document.getElementById(`${category}${i}`);
+                    addToElement(popoverCard, alphabet[category][i]);
                 }
             });
         }
     </script>
 {% endblock %}
-{% block body_attributes %}onload="fetchAlphabet()"{% endblock %}
+{% block body_attributes %}onload="displayAlphabet()"{% endblock %}
 {% block body_content %}
     <div class="d-grid m-5" id="alphabet">
         {% for i in range(39) %}
