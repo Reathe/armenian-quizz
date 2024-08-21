@@ -57,9 +57,8 @@ html {
     gap: 10px; /* Adjust gap between items as needed */
 }
 
-/* make audio element smaller */
-audio {
-    width: 50%;
+.audio {
+    width: 70%;
 }
 
 @media (max-width: 700px) {
