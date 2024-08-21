@@ -38,7 +38,7 @@
     <div class="d-grid m-5" id="alphabet">
         {% for i in range(39) %}
             <div hidden>
-                <div class="text-center" data-name="popover-content">
+                <div class="text-center" data-name="popover-content{{ i }}">
                     <p id="uppercase{{ i }}"></p>
                     <p id="lowercase{{ i }}"></p>
                     <p id="handwritten{{ i }}"></p>
@@ -57,16 +57,16 @@
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
     <script type='text/javascript'>
         $(document).ready(function () {
-            let options = {
-                html: true,
-                //html element
-                //content: $("#popover-content")
-                content: $('[data-name="popover-content"]')
-                //Doing below won't work. Shows title only
-                //content: $("#popover-content").html()
-            }
             const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-            const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl, options))
+            const popoverList = [...popoverTriggerList].map(function (popoverTriggerEl, index) {
+                let options = {
+                    html: true,
+                    //html element
+                    //content: $("#popover-content")
+                    content: $('[data-name="popover-content' + index + '"]')
+                }
+                return new bootstrap.Popover(popoverTriggerEl, options)
+            })
         })
     </script>
 {% endblock %}
