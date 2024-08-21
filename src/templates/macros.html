@@ -1,0 +1,31 @@
+{% macro lettercard() %}
+    <div id="infoCard" class="card mt-1" style="display: none">
+        <div class="card-body">
+            <h5 class="card-title answer-card-title">Correct Answer Details</h5>
+            <p><span id="cardUppercase"></span> <span id="cardLowercase"></span></p>
+            <p><span id="cardHandwritten"></span></p>
+            <p><span id="cardTranscription"></span></p>
+            <p><span id="cardPronunciation"></span></p>
+            <button class="btn btn-primary btn-lg" onclick="closeCard()">Next</button>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro helper_innerHTML_functions() %}
+    <script>
+
+        function innerHTML_for_SVG(svgURL) {
+            let class_name = "handwritten-img";
+            // if dark mode is on
+            if (document.documentElement.getAttribute("data-bs-theme") === "dark") {
+                class_name += " dark";
+            }
+            return `<img src="${svgURL}" class="${class_name}" alt="Handwritten"/>`;
+        }
+
+        function innerHTML_for_audio(audioURL) {
+            return `<audio controls src="${audioURL}" class="w-40"/>`;
+        }
+
+    </script>
+{% endmacro %}

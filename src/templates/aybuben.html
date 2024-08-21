@@ -1,0 +1,67 @@
+<!-- src/templates/aybuben.html -->
+{% extends "base.html" %}
+{% block head_scripts %}
+    <script>
+        async function fetchAlphabet() {
+            const response = await fetch("/get_alphabet", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                }
+            });
+            const data = await response.json();
+            displayAlphabet(data);
+        }
+
+        function displayAlphabet(data) {
+            let selectedCategory = "lowercase"
+            let alphabet = data["alphabet"];
+            alphabet[selectedCategory].forEach(function (letter, i) {
+                const card = document.getElementById(`letter${i}`);
+                card.setAttribute("data-bs-title", letter);
+                card.innerText = letter;
+                for (let category in alphabet) {
+                    const element = document.getElementById(`${category}${i}`);
+                    element.innerText = alphabet[category][i];
+                }
+            });
+        }
+    </script>
+{% endblock %}
+{% block body_attributes %}onload="fetchAlphabet()"{% endblock %}
+{% block body_content %}
+    <div class="d-grid m-5" id="alphabet">
+        {% for i in range(39) %}
+            <div hidden>
+                <div class="" data-name="popover-content">
+                    <p id="uppercase{{ i }}"></p>
+                    <p id="lowercase{{ i }}"></p>
+                    <p id="handwritten{{ i }}"></p>
+                    <p id="transcription{{ i }}"></p>
+                    <p id="pronunciation{{ i }}"></p>
+                </div>
+            </div>
+            <a tabindex="0" id="letter{{ i }}" role="button" data-bs-trigger="focus"
+               class="btn btn-lg btn-danger aybuben"
+               data-bs-toggle="popover" data-bs-title="yes" data-bs-content="">
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}
+{% block end_scripts_after %}
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <script type='text/javascript'>
+        $(document).ready(function () {
+            let options = {
+                html: true,
+                //html element
+                //content: $("#popover-content")
+                content: $('[data-name="popover-content"]')
+                //Doing below won't work. Shows title only
+                //content: $("#popover-content").html()
+            }
+            const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+            const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl, options))
+        })
+    </script>
+{% endblock %}
