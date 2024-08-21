@@ -1,14 +1,8 @@
-{% macro lettercard() %}
-    <div id="infoCard" class="card mt-1" style="display: none">
-        <div class="card-body">
-            <h5 class="card-title answer-card-title">Correct Answer Details</h5>
-            <p><span id="cardUppercase"></span> <span id="cardLowercase"></span></p>
-            <p><span id="cardHandwritten"></span></p>
-            <p><span id="cardTranscription"></span></p>
-            <p><span id="cardPronunciation"></span></p>
-            <button class="btn btn-primary btn-lg" onclick="closeCard()">Next</button>
-        </div>
-    </div>
+{% macro letterCard(prefix = "", suffix = "") %}
+    <span><span id="{{ prefix }}uppercase"></span> <span id="lowercase"></span></span>
+    <span id="handwritten"></span>
+    <span id="transcription"></span>
+    <span id="pronunciation"></span>
 {% endmacro %}
 
 {% macro helper_innerHTML_functions() %}

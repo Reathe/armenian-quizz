@@ -1,6 +1,6 @@
 <!-- src/templates/aybuben.html -->
 {% extends "base.html" %}
-{% from "macros.html" import helper_innerHTML_functions with context %}
+{% from "macros.html" import helper_innerHTML_functions, letterCard %}
 {% block head_scripts %}
     {{ helper_innerHTML_functions() }}
     <script>
@@ -58,10 +58,7 @@
     </div>
     <div id="details-card" class="card position-fixed top-50 start-50 translate-middle">
         <div class="aybuben-card d-flex flex-column card-body text-center">
-            <span><span id="uppercase"></span> <span id="lowercase"></span></span>
-            <span id="handwritten"></span>
-            <span id="transcription"></span>
-            <span id="pronunciation"></span>
+            {{ letterCard() }}
             <button class="btn btn-secondary btn-lg" onclick="closeDetailsCard()">Close</button>
         </div>
     </div>
