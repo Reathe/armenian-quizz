@@ -1,11 +1,13 @@
 import os
 import random
 
-from flask import Flask, jsonify, redirect, render_template, request, url_for, send_from_directory
+from flask import Flask, jsonify, redirect, render_template, request, url_for, send_from_directory, send_file
 from waitress import serve
+from flask_squeeze import Squeeze
 
+squeeze = Squeeze()
 app = Flask(__name__)
-
+squeeze.init_app(app)
 # Eastern armenian alphabet
 armenian_alphabet = {
     "uppercase": [
