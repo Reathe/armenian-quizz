@@ -34,11 +34,11 @@
                 const detailsCard = document.getElementById(category);
                 addToElement(alphabet[category][i], detailsCard);
             }
-            $('#details-card').show();
+            document.getElementById('details-card').style.display = 'block';
         }
 
         function closeDetailsCard() {
-            $('#details-card').hide();
+            document.getElementById('details-card').style.display = 'none';
         }
 
     </script>
@@ -56,7 +56,7 @@
             {% endfor %}
         </div>
     </div>
-    <div id="details-card" class="card position-fixed top-50 start-50 translate-middle">
+    <div id="details-card" class="card position-fixed top-50 start-50 translate-middle" style="display: none">
         <div class="aybuben-card d-flex flex-column card-body text-center">
             {{ letterCard() }}
             <button class="btn btn-secondary btn-lg" onclick="closeDetailsCard()">Close</button>
@@ -64,7 +64,4 @@
     </div>
 {% endblock %}
 {% block end_scripts_after %}
-    <script>
-        closeDetailsCard()
-    </script>
 {% endblock %}
