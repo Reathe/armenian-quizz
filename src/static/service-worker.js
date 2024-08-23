@@ -1,4 +1,4 @@
-//sw.js
+//service-worker.js
 const cacheName = "ArmenianCache";
 const assets = [
     '/quiz',
@@ -10,7 +10,9 @@ const assets = [
     "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
     "https://code.jquery.com/jquery-3.4.1.slim.min.js",
     '/manifest.json',
-    '/static/favicon.ico',
+    '/static/aybuben512.png',
+    '/static/aybuben192.png',
+    '/static/aybuben144.png',
     '/static/sounds/Hy-ա.mp3',
     '/static/sounds/Hy-բ.mp3',
     '/static/sounds/Hy-գ.mp3',
@@ -90,7 +92,7 @@ const assets = [
     '/static/handwritten/Ֆ_handwritten.svg',
     '/static/handwritten/և_handwritten.svg'
 ];
-console.log('Hello from sw.js');
+console.log('Hello from service-worker.js');
 self.addEventListener("install", installEvent => {
     console.log('Installing');
     installEvent.waitUntil(

@@ -296,27 +296,6 @@ def favicon():
     return send_from_directory(app.static_folder, 'favicon.ico')
 
 
-"""
-@app.route('/manifest.json')
-def serve_manifest():
-    return send_file('manifest.json', mimetype='application/manifest+json')
-
-
-
-@app.route('/sw.js')
-def serve_sw():
-    return send_file('sw.js', mimetype='application/javascript')
-
-@app.route('/sw.js')
-def service_worker():
-    response = make_response(send_from_directory('static', 'sw.js'))
-    response.headers['Cache-Control'] = 'no-cache'
-    return response
-    
-
-"""
-
-
 @app.route('/manifest.json')
 def manifest():
     return send_from_directory('static', 'manifest.json')
@@ -326,11 +305,8 @@ def manifest():
 def get_service_worker():
     # in this case serviceWorker.js is stored in the root of the project
     # You can enter the name of directory in which this file is stored
-    response = make_response(send_from_directory('static', 'sw.js'))
+    response = make_response(send_from_directory('static', 'service-worker.js'))
     response.headers['Content-Type'] = 'application/javascript'
-    response.headers['Cache-Control'] = 'no-cache'
-    response.headers['Service-Worker-Allowed'] = '/'
-
     return response
 
 
