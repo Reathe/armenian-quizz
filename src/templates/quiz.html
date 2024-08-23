@@ -2,6 +2,8 @@
 {% extends "base.html" %}
 {% from "macros.html" import helper_innerHTML_functions, letterCard %}
 {% block head_scripts %}
+    <meta name="description"
+          content="A quiz to test your knowledge of the Armenian alphabet with sounds, pronunciation, and handwriting.">
     {{ helper_innerHTML_functions() }}
     <script>
         async function fetchQuestion() {

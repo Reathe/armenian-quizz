@@ -1,7 +1,8 @@
 import os
 import random
 
-from flask import Flask, jsonify, redirect, render_template, request, url_for, send_from_directory, send_file
+from flask import Flask, jsonify, redirect, render_template, request, url_for, send_from_directory, send_file, \
+    make_response
 from waitress import serve
 from flask_squeeze import Squeeze
 
@@ -238,7 +239,7 @@ def get_random_choices(answer_category, correct_answer, num_choices=4):
 
 @app.route("/")
 def index():
-    # redirect to the quiz page
+    # redirect to the aybuben page
     return redirect(url_for("aybuben"))
 
 
@@ -288,6 +289,25 @@ def google_site_verf():
 @app.route('/sitemap.xml')
 def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(app.static_folder, 'favicon.ico')
+
+
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest.json')
+
+
+@app.route('/sw.js')
+def get_service_worker():
+    # in this case serviceWorker.js is stored in the root of the project
+    # You can enter the name of directory in which this file is stored
+    response = make_response(send_from_directory('static', 'service-worker.js'))
+    response.headers['Content-Type'] = 'application/javascript'
+    return response
 
 
 if os.environ.get("FLASK_ENV") == "development":
