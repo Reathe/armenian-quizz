@@ -1,8 +1,6 @@
 //sw.js
-importScripts("https://progressier.app/EMDkK1uuek6Lv8F8YInl/sw.js");
 const cacheName = "ArmenianCache";
 const assets = [
-    '/',
     '/quiz',
     '/aybuben',
     // '/api/posts',
@@ -11,6 +9,7 @@ const assets = [
     'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',
     "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
     "https://code.jquery.com/jquery-3.4.1.slim.min.js",
+    '/manifest.json',
     '/static/favicon.ico',
     '/static/sounds/Hy-ա.mp3',
     '/static/sounds/Hy-բ.mp3',
@@ -45,7 +44,7 @@ const assets = [
     '/static/sounds/Hy-տ.mp3',
     '/static/sounds/Hy-ր.mp3',
     '/static/sounds/Hy-ց.mp3',
-    '/static/sounds/Hy-ւ.mp3',
+    '/static/sounds/Hy-ու.mp3',
     '/static/sounds/Hy-փ.mp3',
     '/static/sounds/Hy-ք.mp3',
     '/static/sounds/Hy-օ.mp3',
@@ -84,7 +83,7 @@ const assets = [
     '/static/handwritten/Տ_handwritten.svg',
     '/static/handwritten/Ր_handwritten.svg',
     '/static/handwritten/Ց_handwritten.svg',
-    '/static/handwritten/Ւ_handwritten.svg',
+    '/static/handwritten/ՈՒ_handwritten.svg',
     '/static/handwritten/Փ_handwritten.svg',
     '/static/handwritten/Ք_handwritten.svg',
     '/static/handwritten/Օ_handwritten.svg',
@@ -93,14 +92,25 @@ const assets = [
 ];
 console.log('Hello from sw.js');
 self.addEventListener("install", installEvent => {
+    console.log('Installing');
     installEvent.waitUntil(
         caches.open(cacheName).then(cache => {
             try {
                 cache.addAll(assets).then(r => console.log('assets added to cache'));
             } catch (e) {
-                console.log(e);
+                console.log('Error in cache install event:', e);
             }
 
         })
     )
-})
+});
+
+//caching the website itself aka /quiz, /aybuben
+//handle redirects from / to /aybuben
+self.addEventListener('fetch', fetchEvent => {
+    fetchEvent.respondWith(
+        caches.match(fetchEvent.request).then(res => {
+            return res || fetch(fetchEvent.request)
+        })
+    )
+});

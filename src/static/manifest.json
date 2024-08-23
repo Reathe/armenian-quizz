@@ -1,16 +1,20 @@
 {
   "name": "Learn Armenian Alphabet",
   "short_name": "Aybuben",
-  "start_url": "/",
+  "start_url": "./aybuben",
   "scope": "/",
   "display": "standalone",
-  "theme_color": "#317EFB",
-  "background_color": "#317EFB",
   "icons": [
     {
       "src": "/static/favicon.ico",
       "sizes": "32x32",
       "type": "image/ico",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
