@@ -104,10 +104,10 @@ function stripRangeHeader(request) {
     return request;
 }
 
-async function getResponseFromPartial(response) {
+function getResponseFromPartial(response) {
     //handle partial content
     console.log('Partial content');
-    const blob = await response.blob();
+    const blob = response.blob();
     const range = response.headers.get('content-range');
     const contentLength = range.split('/')[1];
     const headers = new Headers({
@@ -125,7 +125,7 @@ self.addEventListener("install", installEvent => {
         for (let i = 0; i < assetsMP3.length; i++) {
             let response = await fetch(assetsMP3[i]);
             if (response.status === 206) {
-                response = await getResponseFromPartial(response);
+                response = getResponseFromPartial(response);
             } else if (response.status !== 200) {
                 console.log('Error fetching asset: ', assetsMP3[i]);
                 continue;
