@@ -253,7 +253,7 @@ def aybuben():
     return render_template("aybuben.html")
 
 
-@app.route("/get_alphabet", methods=["POST"])
+@app.route("/get_alphabet")
 def get_alphabet():
     return jsonify({'alphabet': armenian_alphabet})
 
@@ -303,10 +303,9 @@ def manifest():
 
 @app.route('/sw.js')
 def get_service_worker():
-    # in this case serviceWorker.js is stored in the root of the project
-    # You can enter the name of directory in which this file is stored
     response = make_response(send_from_directory('static', 'service-worker.js'))
     response.headers['Content-Type'] = 'application/javascript'
+    response.headers['Cache-Control'] = 'no-cache'
     return response
 
 

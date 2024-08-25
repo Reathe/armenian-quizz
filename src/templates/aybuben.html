@@ -7,16 +7,13 @@
     {{ helper_innerHTML_functions() }}
     <script>
         async function fetchAlphabet() {
-            if (localStorage.alphabet)
-                return JSON.parse(localStorage.alphabet);
             const response = await fetch("/get_alphabet", {
-                method: "POST",
+                method: "GET",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 }
             });
             const data = await response.json();
-            localStorage.alphabet = JSON.stringify(data["alphabet"]);
             return data["alphabet"];
         }
 
@@ -30,8 +27,8 @@
             });
         }
 
-        function showDetailsCard(i) {
-            const alphabet = JSON.parse(localStorage.alphabet);
+        async function showDetailsCard(i) {
+            const alphabet = await fetchAlphabet();
             for (let category in alphabet) {
                 const detailsCard = document.getElementById(category);
                 addToElement(alphabet[category][i], detailsCard);

@@ -1,5 +1,5 @@
 //service-worker.js
-const cacheName = "ArmenianCache";
+const cacheName = "ArmenianCache-v1";
 const assets = [
     '/quiz',
     '/aybuben',
@@ -9,49 +9,9 @@ const assets = [
     'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',
     "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
     "https://code.jquery.com/jquery-3.4.1.slim.min.js",
-    '/manifest.json',
     '/static/aybuben512.png',
     '/static/aybuben192.png',
     '/static/aybuben144.png',
-    '/static/sounds/Hy-ա.mp3',
-    '/static/sounds/Hy-բ.mp3',
-    '/static/sounds/Hy-գ.mp3',
-    '/static/sounds/Hy-դ.mp3',
-    '/static/sounds/Hy-ե.mp3',
-    '/static/sounds/Hy-զ.mp3',
-    '/static/sounds/Hy-է.mp3',
-    '/static/sounds/Hy-ը.mp3',
-    '/static/sounds/Hy-թ.mp3',
-    '/static/sounds/Hy-ժ.mp3',
-    '/static/sounds/Hy-ի.mp3',
-    '/static/sounds/Hy-լ.mp3',
-    '/static/sounds/Hy-խ.mp3',
-    '/static/sounds/Hy-ծ.mp3',
-    '/static/sounds/Hy-կ.mp3',
-    '/static/sounds/Hy-հ.mp3',
-    '/static/sounds/Hy-ձ.mp3',
-    '/static/sounds/Hy-ղ.mp3',
-    '/static/sounds/Hy-ճ.mp3',
-    '/static/sounds/Hy-մ.mp3',
-    '/static/sounds/Hy-յ.mp3',
-    '/static/sounds/Hy-ն.mp3',
-    '/static/sounds/Hy-շ.mp3',
-    '/static/sounds/Hy-ո.mp3',
-    '/static/sounds/Hy-չ.mp3',
-    '/static/sounds/Hy-պ.mp3',
-    '/static/sounds/Hy-ջ.mp3',
-    '/static/sounds/Hy-ռ.mp3',
-    '/static/sounds/Hy-ս.mp3',
-    '/static/sounds/Hy-վ.mp3',
-    '/static/sounds/Hy-տ.mp3',
-    '/static/sounds/Hy-ր.mp3',
-    '/static/sounds/Hy-ց.mp3',
-    '/static/sounds/Hy-ու.mp3',
-    '/static/sounds/Hy-փ.mp3',
-    '/static/sounds/Hy-ք.mp3',
-    '/static/sounds/Hy-օ.mp3',
-    '/static/sounds/Hy-ֆ.mp3',
-    '/static/sounds/Hy-և.mp3',
     '/static/handwritten/Ա_handwritten.svg',
     '/static/handwritten/Բ_handwritten.svg',
     '/static/handwritten/Գ_handwritten.svg',
@@ -92,27 +52,135 @@ const assets = [
     '/static/handwritten/Ֆ_handwritten.svg',
     '/static/handwritten/և_handwritten.svg'
 ];
-console.log('Hello from service-worker.js');
-self.addEventListener("install", installEvent => {
-    console.log('Installing');
-    installEvent.waitUntil(
-        caches.open(cacheName).then(cache => {
-            try {
-                cache.addAll(assets).then(r => console.log('assets added to cache'));
-            } catch (e) {
-                console.log('Error in cache install event:', e);
-            }
+const assetsMP3 = [
+    '/static/sounds/Hy-ա.mp3',
+    '/static/sounds/Hy-բ.mp3',
+    '/static/sounds/Hy-գ.mp3',
+    '/static/sounds/Hy-դ.mp3',
+    '/static/sounds/Hy-ե.mp3',
+    '/static/sounds/Hy-զ.mp3',
+    '/static/sounds/Hy-է.mp3',
+    '/static/sounds/Hy-ը.mp3',
+    '/static/sounds/Hy-թ.mp3',
+    '/static/sounds/Hy-ժ.mp3',
+    '/static/sounds/Hy-ի.mp3',
+    '/static/sounds/Hy-լ.mp3',
+    '/static/sounds/Hy-խ.mp3',
+    '/static/sounds/Hy-ծ.mp3',
+    '/static/sounds/Hy-կ.mp3',
+    '/static/sounds/Hy-հ.mp3',
+    '/static/sounds/Hy-ձ.mp3',
+    '/static/sounds/Hy-ղ.mp3',
+    '/static/sounds/Hy-ճ.mp3',
+    '/static/sounds/Hy-մ.mp3',
+    '/static/sounds/Hy-յ.mp3',
+    '/static/sounds/Hy-ն.mp3',
+    '/static/sounds/Hy-շ.mp3',
+    '/static/sounds/Hy-ո.mp3',
+    '/static/sounds/Hy-չ.mp3',
+    '/static/sounds/Hy-պ.mp3',
+    '/static/sounds/Hy-ջ.mp3',
+    '/static/sounds/Hy-ռ.mp3',
+    '/static/sounds/Hy-ս.mp3',
+    '/static/sounds/Hy-վ.mp3',
+    '/static/sounds/Hy-տ.mp3',
+    '/static/sounds/Hy-ր.mp3',
+    '/static/sounds/Hy-ց.mp3',
+    '/static/sounds/Hy-ու.mp3',
+    '/static/sounds/Hy-փ.mp3',
+    '/static/sounds/Hy-ք.mp3',
+    '/static/sounds/Hy-օ.mp3',
+    '/static/sounds/Hy-ֆ.mp3',
+    '/static/sounds/Hy-և.mp3'
+];
 
-        })
-    )
+
+function stripRangeHeader(request) {
+    if (request.headers.has('range')) {
+        const newRequest = new Request(request.url);
+        newRequest.headers.delete('range');
+        return newRequest;
+    }
+    return request;
+}
+
+async function getResponseFromPartial(response) {
+    //handle partial content
+    console.log('Partial content');
+    const blob = await response.blob();
+    const range = response.headers.get('content-range');
+    const contentLength = range.split('/')[1];
+    const headers = new Headers({
+        'Content-Type': 'audio/mpeg',
+        'Content-Length': contentLength
+    });
+    return new Response(blob, {status: 200, headers});
+}
+
+self.addEventListener("install", installEvent => {
+    installEvent.waitUntil(async function () {
+        console.log('Installing service worker...');
+        const cache = await caches.open(cacheName);
+        await cache.addAll(assets);
+        for (let i = 0; i < assetsMP3.length; i++) {
+            let response = await fetch(assetsMP3[i]);
+            if (response.status === 206) {
+                response = await getResponseFromPartial(response);
+            } else if (response.status !== 200) {
+                console.log('Error fetching asset: ', assetsMP3[i]);
+                continue;
+            }
+            await cache.put(assetsMP3[i], response);
+        }
+        console.log('All assets added to cache ', cacheName);
+        console.log('Service worker installed');
+        await self.skipWaiting();
+    }());
+})
+
+
+self.addEventListener('activate', function (event) {
+    // Caches not to be deleted
+    const cacheWhitelist = [cacheName];
+    event.waitUntil(async function () {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(function (key) {
+            if (cacheWhitelist.indexOf(key) === -1) {
+                return caches.delete(key);
+            }
+        }));
+        console.log('Clients claims.');
+        await self.clients.claim();
+    }());
 });
 
-//caching the website itself aka /quiz, /aybuben
-//handle redirects from / to /aybuben
-self.addEventListener('fetch', fetchEvent => {
-    fetchEvent.respondWith(
-        caches.match(fetchEvent.request).then(res => {
-            return res || fetch(fetchEvent.request)
-        })
-    )
+self.addEventListener("fetch", fetchEvent => {
+    //ignore POST requests
+    if (fetchEvent.request.method !== 'GET') {
+        return;
+    }
+
+    fetchEvent.respondWith(async function () {
+        let req = fetchEvent.request;
+        if (fetchEvent.request.url.endsWith('.mp3')) {
+            // if the request has the Range header, it means it's a partial request
+            // so we recreate the request without the Range header
+            req = stripRangeHeader(fetchEvent.request);
+        }
+        const cachedResponse = await caches.match(req);
+        if (cachedResponse)
+            return cachedResponse;
+
+        const fetchResponse = await fetch(req);
+        const clonedResponse = await fetchResponse.clone();
+        fetchEvent.waitUntil(async function () {
+            const cache = await caches.open(cacheName);
+            try {
+                await cache.put(fetchEvent.request, clonedResponse);
+            } catch (error) {
+                console.error("Error caching response: ", error);
+            }
+        }());
+        return fetchResponse;
+    }());
 });
