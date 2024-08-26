@@ -1,10 +1,9 @@
 import os
 import random
 
-from flask import Flask, jsonify, redirect, render_template, request, url_for, send_from_directory, send_file, \
-    make_response
-from waitress import serve
+from flask import Flask, jsonify, redirect, render_template, request, url_for, send_from_directory, make_response
 from flask_squeeze import Squeeze
+from waitress import serve
 
 squeeze = Squeeze()
 app = Flask(__name__)
@@ -304,7 +303,7 @@ def manifest():
 @app.route('/sw.js')
 def get_service_worker():
     response = make_response(send_from_directory('static', 'service-worker.js'))
-    response.headers['Content-Type'] = 'application/javascript'
+    response.headers['Content-Type'] = 'text/javascript'
     response.headers['Cache-Control'] = 'no-cache'
     return response
 
