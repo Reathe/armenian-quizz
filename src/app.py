@@ -255,7 +255,7 @@ def aybuben():
 
 @app.route("/get_alphabet")
 def get_alphabet():
-    return jsonify({'alphabet': armenian_alphabet})
+    return jsonify(armenian_alphabet)
 
 
 @app.route("/get_question", methods=["POST"])
