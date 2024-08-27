@@ -1,4 +1,4 @@
-.venv
+venv
 app.egg-info
 build
 __pycache__
