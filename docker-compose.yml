@@ -1,6 +1,5 @@
 services:
   armenian-alphabet:
-    image: reathe/armenian-alphabet
-    restart: unless-stopped
+    build: .
     ports:
       - "8080:8080"
