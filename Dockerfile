@@ -1,10 +1,7 @@
-FROM python:3.11
-
+FROM python:3.11-alpine
 WORKDIR /app
-COPY requirements.txt requirements.txt
-RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt
-# update PATH environment variable
-ENV PATH=/root/.local:$PATH
-COPY . .
-CMD ["python3", "src/app.py"]
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . /app
+EXPOSE 8080
+CMD ["python", "src/app.py"]
