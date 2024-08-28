@@ -1,9 +1,8 @@
 <!-- src/templates/quiz.html -->
 {% extends "base.html" %}
 {% from "macros.html" import helper_innerHTML_functions, letterCard %}
+{% block meta_desciption_additional %}Test your knowledge of the Armenian alphabet with this quiz.{% endblock %}
 {% block head_scripts %}
-    <meta name="description"
-          content="A quiz to test your knowledge of the Armenian alphabet with sounds, pronunciation, and handwriting.">
     {{ helper_innerHTML_functions() }}
     <script>
         async function fetchQuestion() {

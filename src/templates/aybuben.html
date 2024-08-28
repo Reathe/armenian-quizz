@@ -1,9 +1,8 @@
 <!-- src/templates/aybuben.html -->
 {% extends "base.html" %}
 {% from "macros.html" import helper_innerHTML_functions, letterCard %}
+{% block meta_desciption_additional %}Learn the Armenian alphabet with a list of the armenian letters.{% endblock %}
 {% block head_scripts %}
-    <meta name="description"
-          content="A list of all the armenian letters with sounds pronunciation and handwriting.">
     {{ helper_innerHTML_functions() }}
     <script>
         async function fetchAlphabet() {
