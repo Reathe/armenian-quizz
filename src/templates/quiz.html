@@ -1,45 +1,37 @@
 <!-- src/templates/quiz.html -->
 {% extends "base.html" %}
-{% from "macros.html" import helper_innerHTML_functions, letterCard %}
+{% from "macros.html" import helper_innerHTML_functions, letterCard, fetchAlphabet %}
 {% block meta_desciption_additional %}Test your knowledge of the Armenian alphabet with this quiz.{% endblock %}
 {% block head_scripts %}
     {{ helper_innerHTML_functions() }}
+    {{ fetchAlphabet() }}
     <script>
         async function fetchQuestion() {
-            const questionCategory = getSelectedCategory("questionCategory", []);
-            const answerCategory = getSelectedCategory("answerCategory", [
-                questionCategory,
-                "pronunciation",
-            ]);
-            const response = await fetch("/get_question", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                body: `category=${questionCategory}&answer_category=${answerCategory}`,
-            });
-            const data = await response.json();
+            const alphabet = fetchAlphabet();
+
+            let {questionCategory, answerCategory} = getSelectedCategories(alphabet.keys());
+            let data = {}
             displayQuestion(data);
         }
 
-        function getSelectedCategory(categoryName, excluded = []) {
-            const selectedValue = document.querySelector(
-                `input[name="${categoryName}"]:checked`
-            ).value;
-            if (selectedValue === "random") {
-                const categories = [
-                    "uppercase",
-                    "lowercase",
-                    "transcription",
-                    "pronunciation",
-                    "handwritten",
-                ].filter((category) => !excluded.includes(category));
-                return categories[Math.floor(Math.random() * categories.length)];
+        function getSelectedCategories(categories) {
+            // TODO: make this work
+            let questionSelectedCategory = document.querySelector(`input[name="questionCategory"]:checked`).value;
+            let answerSelectedCategory = document.querySelector(`input[name="answerCategory"]:checked`).value;
+            let armenianCategories = ["uppercase", "lowercase", "handwritten"];
+            let englishCategories = ["transcription", "pronunciation"];
+
+            if (questionSelectedCategory === "random") {
+                questionSelectedCategory = categories[Math.floor(Math.random() * categories.length)];
             }
-            return selectedValue;
+            if (answerSelectedCategory === "random") {
+                const filteredCategories = categories.filter(category => category !== questionSelectedCategory);
+                answerSelectedCategory = filteredCategories[Math.floor(Math.random() * filteredCategories.length)];
+            }
+            return {questionSelectedCategory, answerSelectedCategory};
         }
 
-        function displayQuestion(data) {
+        function displayQuestion(question, choices, correct, categories) {
             const questionElement = document.getElementById("question");
             const choicesElement = document.getElementById("choices");
             const feedbackElement = document.getElementById("feedback");

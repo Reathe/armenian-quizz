@@ -33,3 +33,10 @@
 
     </script>
 {% endmacro %}
+{% macro fetchAlphabet() %}
+    <script>
+        async function fetchAlphabet() {
+            return await (await fetch("/get_alphabet")).json();
+        }
+    </script>
+{% endmacro %}
