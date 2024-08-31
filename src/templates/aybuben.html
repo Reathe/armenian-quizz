@@ -1,21 +1,11 @@
 <!-- src/templates/aybuben.html -->
 {% extends "base.html" %}
-{% from "macros.html" import helper_innerHTML_functions, letterCard %}
+{% from "macros.html" import helper_innerHTML_functions, letterCard, fetchAlphabet %}
+{% block meta_description_additional %}Learn the Armenian alphabet with a list of the armenian letters.{% endblock %}
 {% block head_scripts %}
-    <meta name="description"
-          content="A list of all the armenian letters with sounds pronunciation and handwriting.">
     {{ helper_innerHTML_functions() }}
+    {{ fetchAlphabet() }}
     <script>
-        async function fetchAlphabet() {
-            const response = await fetch("/get_alphabet", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                }
-            });
-            return await response.json();
-        }
-
         async function displayAlphabet() {
             const alphabet = await fetchAlphabet();
             let selectedCategory = "lowercase"
