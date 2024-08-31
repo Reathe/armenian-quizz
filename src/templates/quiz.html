@@ -6,21 +6,22 @@
     {{ helper_innerHTML_functions() }}
     {{ fetchAlphabet() }}
     <script>
+        const categories = ["uppercase", "lowercase", "handwritten", "transcription", "pronunciation"];
+        const learningCategories = ["uppercase", "lowercase", "handwritten"];
+        const explainingCategories = ["transcription", "pronunciation", "handwritten"];
+
         async function fetchQuestion() {
             const alphabet = await fetchAlphabet();
-            const categories = Object.keys(alphabet);
-            let {questionSelectedCategory, answerSelectedCategory} = getSelectedCategories(categories);
-            let [questionCategoryLetters, answerCategoryLetters] = [alphabet[questionSelectedCategory], alphabet[answerSelectedCategory]];
+            let {questionCategory, answerCategory} = getSelectedCategories(categories);
 
-            let question = randomSelectFrom(questionCategoryLetters);
-            let correctIndex = questionCategoryLetters.indexOf(question);
-            let correct = answerCategoryLetters[correctIndex];
-            let answers = randomSampleIncluding(answerCategoryLetters, 4, correct);
-            let correctAllCategories = {};
+            let question = randomSelectFrom(alphabet[questionCategory]);
+            let correctIndex = alphabet[questionCategory].indexOf(question);
+            let answer = {};
             for (let category of categories)
-                correctAllCategories[category] = alphabet[category][correctIndex];
+                answer[category] = alphabet[category][correctIndex];
+            let choices = randomSampleIncluding(alphabet[answerCategory], 4, answer[answerCategory]);
 
-            displayQuestion(question, answers, correct, correctAllCategories);
+            displayQuestion(question, choices, answerCategory, answer);
         }
 
         function randomSelectFrom(array, excluding = []) {
@@ -45,8 +46,6 @@
         }
 
         function SelectSecondCategoryRandom(firstCategory, excluding = []) {
-            let learningCategories = ["uppercase", "lowercase", "handwritten"];
-            let explainingCategories = ["transcription", "pronunciation"];
             let otherCategory = learningCategories.includes(firstCategory) ? explainingCategories : learningCategories;
             return randomSelectFrom(otherCategory, excluding);
         }
@@ -54,22 +53,22 @@
         // When one of the selected categories is a learning category, the other should be an explaining category
         // the selected category should be random if the selected category is not in the list of categories
         function getSelectedCategories(categories) {
-            let questionSelectedCategory = document.querySelector(`input[name="questionCategory"]:checked`).value;
-            let answerSelectedCategory = document.querySelector(`input[name="answerCategory"]:checked`).value;
+            let questionCategory = document.querySelector(`input[name="questionCategory"]:checked`).value;
+            let answerCategory = document.querySelector(`input[name="answerCategory"]:checked`).value;
 
-            if (questionSelectedCategory === "random" && answerSelectedCategory === "random") {
-                questionSelectedCategory = randomSelectFrom(categories);
+            if (questionCategory === "random" && answerCategory === "random") {
+                questionCategory = randomSelectFrom(categories);
             }
-            if (answerSelectedCategory === "random") {
-                answerSelectedCategory = SelectSecondCategoryRandom(questionSelectedCategory, ["pronunciation"]);
-            } else if (questionSelectedCategory === "random") {
-                questionSelectedCategory = SelectSecondCategoryRandom(answerSelectedCategory);
+            if (answerCategory === "random") {
+                answerCategory = SelectSecondCategoryRandom(questionCategory, ["pronunciation", questionCategory]);
+            } else if (questionCategory === "random") {
+                questionCategory = SelectSecondCategoryRandom(answerCategory, [answerCategory]);
             }
 
-            return {questionSelectedCategory, answerSelectedCategory};
+            return {questionCategory, answerCategory};
         }
 
-        function displayQuestion(question, choices, correct, allCategories) {
+        function displayQuestion(question, choices, answerCategory, answer) {
             const questionElement = document.getElementById("question");
             const choicesElement = document.getElementById("choices");
             const feedbackElement = document.getElementById("feedback");
@@ -83,15 +82,15 @@
                 addToElement(choice, element);
                 element.className = "btn btn-primary btn-block mb-2";
                 element.onclick = () =>
-                    checkAnswer(choice, correct, allCategories);
+                    checkAnswer(choice, answerCategory, answer);
                 choicesElement.appendChild(element);
             });
         }
 
-        function checkAnswer(choice, correct, allCategories) {
+        function checkAnswer(choice, answerCategory, answer) {
             const feedbackElement = document.getElementById("feedback");
             const choicesElement = document.getElementById("choices");
-            if (choice === correct) {
+            if (choice === answer[answerCategory]) {
                 feedbackElement.textContent = "Correct!";
                 feedbackElement.className = "text-success";
                 setTimeout(fetchQuestion, 600); // Fetch new question after 1.5 seconds
@@ -99,15 +98,15 @@
                 feedbackElement.textContent = "Incorrect!";
                 feedbackElement.className = "text-danger";
                 choicesElement.innerHTML = ""; // Remove answer buttons
-                displayCard(allCategories);
+                displayCard(answer);
             }
         }
 
-        function displayCard(allCategories) {
+        function displayCard(answer) {
             $('#infoCard').show();
-            for (let category in allCategories) {
+            for (let category in answer) {
                 const detailsCard = document.getElementById(category);
-                addToElement(allCategories[category], detailsCard);
+                addToElement(answer[category], detailsCard);
             }
         }
 
