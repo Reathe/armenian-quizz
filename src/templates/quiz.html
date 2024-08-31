@@ -10,7 +10,7 @@
         const learningCategories = ["uppercase", "lowercase", "handwritten"];
         const explainingCategories = ["transcription", "pronunciation", "handwritten"];
 
-        async function fetchQuestion() {
+        async function getQuestion() {
             const alphabet = await fetchAlphabet();
             let {questionCategory, answerCategory} = getSelectedCategories(categories);
 
@@ -82,27 +82,27 @@
                 addToElement(choice, element);
                 element.className = "btn btn-primary btn-block mb-2";
                 element.onclick = () =>
-                    checkAnswer(choice, answerCategory, answer);
+                    onAnswerClick(choice, answerCategory, answer);
                 choicesElement.appendChild(element);
             });
         }
 
-        function checkAnswer(choice, answerCategory, answer) {
+        function onAnswerClick(choice, answerCategory, answer) {
             const feedbackElement = document.getElementById("feedback");
             const choicesElement = document.getElementById("choices");
             if (choice === answer[answerCategory]) {
                 feedbackElement.textContent = "Correct!";
                 feedbackElement.className = "text-success";
-                setTimeout(fetchQuestion, 600); // Fetch new question after 1.5 seconds
+                setTimeout(getQuestion, 600); // Fetch new question after 1.5 seconds
             } else {
                 feedbackElement.textContent = "Incorrect!";
                 feedbackElement.className = "text-danger";
                 choicesElement.innerHTML = ""; // Remove answer buttons
-                displayCard(answer);
+                displayAnswerCard(answer);
             }
         }
 
-        function displayCard(answer) {
+        function displayAnswerCard(answer) {
             $('#infoCard').show();
             for (let category in answer) {
                 const detailsCard = document.getElementById(category);
@@ -112,11 +112,11 @@
 
         function closeCard() {
             $('#infoCard').hide();
-            fetchQuestion();
+            getQuestion();
         }
     </script>
 {% endblock %}
-{% block body_attributes %}onload="fetchQuestion()"{% endblock %}
+{% block body_attributes %}onload="getQuestion()"{% endblock %}
 {% block body_content %}
     <div class="container-sm card mt-1 text-center">
         <div class="card-body">
