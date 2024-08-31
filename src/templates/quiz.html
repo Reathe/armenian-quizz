@@ -7,45 +7,83 @@
     {{ fetchAlphabet() }}
     <script>
         async function fetchQuestion() {
-            const alphabet = fetchAlphabet();
+            const alphabet = await fetchAlphabet();
+            const categories = Object.keys(alphabet);
+            let {questionSelectedCategory, answerSelectedCategory} = getSelectedCategories(categories);
+            let [questionCategoryLetters, answerCategoryLetters] = [alphabet[questionSelectedCategory], alphabet[answerSelectedCategory]];
 
-            let {questionCategory, answerCategory} = getSelectedCategories(alphabet.keys());
-            let data = {}
-            displayQuestion(data);
+            let question = randomSelectFrom(questionCategoryLetters);
+            let correctIndex = questionCategoryLetters.indexOf(question);
+            let correct = answerCategoryLetters[correctIndex];
+            let answers = randomSampleIncluding(answerCategoryLetters, 4, correct);
+            let correctAllCategories = {};
+            for (let category of categories)
+                correctAllCategories[category] = alphabet[category][correctIndex];
+
+            displayQuestion(question, answers, correct, correctAllCategories);
         }
 
+        function randomSelectFrom(array, excluding = []) {
+            let filteredArray = array.filter(element => !excluding.includes(element));
+            return filteredArray[Math.floor(Math.random() * filteredArray.length)];
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // returns a random sample of the array with the specified sample size including the specified element
+        function randomSampleIncluding(array, sampleSize, element) {
+            shuffle(array);
+            let sample = array.slice(0, sampleSize);
+            if (!sample.includes(element))
+                sample[Math.floor(Math.random() * sampleSize)] = element;
+            return sample;
+        }
+
+        function SelectSecondCategoryRandom(firstCategory, excluding = []) {
+            let learningCategories = ["uppercase", "lowercase", "handwritten"];
+            let explainingCategories = ["transcription", "pronunciation"];
+            let otherCategory = learningCategories.includes(firstCategory) ? explainingCategories : learningCategories;
+            return randomSelectFrom(otherCategory, excluding);
+        }
+
+        // When one of the selected categories is a learning category, the other should be an explaining category
+        // the selected category should be random if the selected category is not in the list of categories
         function getSelectedCategories(categories) {
-            // TODO: make this work
             let questionSelectedCategory = document.querySelector(`input[name="questionCategory"]:checked`).value;
             let answerSelectedCategory = document.querySelector(`input[name="answerCategory"]:checked`).value;
-            let armenianCategories = ["uppercase", "lowercase", "handwritten"];
-            let englishCategories = ["transcription", "pronunciation"];
 
-            if (questionSelectedCategory === "random") {
-                questionSelectedCategory = categories[Math.floor(Math.random() * categories.length)];
+            if (questionSelectedCategory === "random" && answerSelectedCategory === "random") {
+                questionSelectedCategory = randomSelectFrom(categories);
             }
             if (answerSelectedCategory === "random") {
-                const filteredCategories = categories.filter(category => category !== questionSelectedCategory);
-                answerSelectedCategory = filteredCategories[Math.floor(Math.random() * filteredCategories.length)];
+                answerSelectedCategory = SelectSecondCategoryRandom(questionSelectedCategory, ["pronunciation"]);
+            } else if (questionSelectedCategory === "random") {
+                questionSelectedCategory = SelectSecondCategoryRandom(answerSelectedCategory);
             }
+
             return {questionSelectedCategory, answerSelectedCategory};
         }
 
-        function displayQuestion(question, choices, correct, categories) {
+        function displayQuestion(question, choices, correct, allCategories) {
             const questionElement = document.getElementById("question");
             const choicesElement = document.getElementById("choices");
             const feedbackElement = document.getElementById("feedback");
             choicesElement.innerHTML = "";
             feedbackElement.textContent = ""; // Clear feedback
-            addToElement(data.question, questionElement);
+            addToElement(question, questionElement);
 
-            data.choices.forEach((choice) => {
+            choices.forEach((choice) => {
                 let element;
                 element = document.createElement("button");
                 addToElement(choice, element);
                 element.className = "btn btn-primary btn-block mb-2";
                 element.onclick = () =>
-                    checkAnswer(choice, data.correct, data.all_categories);
+                    checkAnswer(choice, correct, allCategories);
                 choicesElement.appendChild(element);
             });
         }
