@@ -1,5 +1,4 @@
 import os
-import random
 
 from flask import Flask, jsonify, redirect, render_template, request, url_for, send_from_directory, make_response
 from flask_squeeze import Squeeze
@@ -228,14 +227,6 @@ with app.app_context(), app.test_request_context():
     ]
 
 
-def get_random_choices(answer_category, correct_answer, num_choices=4):
-    choices = random.sample(armenian_alphabet[answer_category], num_choices)
-    if correct_answer not in choices:
-        choices[-1] = correct_answer
-    random.shuffle(choices)
-    return choices
-
-
 @app.route("/")
 def index():
     # redirect to the aybuben page
@@ -257,31 +248,8 @@ def get_alphabet():
     return jsonify(armenian_alphabet)
 
 
-@app.route("/get_question", methods=["POST"])
-def get_question():
-    question_category = request.form.get("category")
-    answer_category = request.form.get("answer_category")
-    if question_category is None or answer_category is None:
-        return redirect(url_for("index"))
-
-    correct_index = random.randint(0, len(armenian_alphabet[question_category]) - 1)
-    correct_answer = armenian_alphabet[answer_category][correct_index]
-    question = armenian_alphabet[question_category][correct_index]
-    choices = get_random_choices(answer_category, correct_answer)
-    all_categories = {key: armenian_alphabet[key][correct_index] for key in armenian_alphabet}
-
-    return jsonify(
-        {
-            "question": question,
-            "choices": choices,
-            "correct": correct_answer,
-            "all_categories": all_categories,
-        }
-    )
-
-
 @app.route("/google6092c9f6782b7a3a.html")
-def google_site_verf():
+def google_site_verif():
     return render_template("google6092c9f6782b7a3a.html")
 
 
