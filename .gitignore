@@ -2,3 +2,4 @@ venv
 app.egg-info
 build
 __pycache__
+.idea
